@@ -29,10 +29,17 @@
 				?>
 			</ul>
 		</nav>
+		<h1>Recette de cuisine</h1>
 	</header>
 	<main>
-		<h1><?php echo $this->title; ?></h1>
-		<?php echo $this->content;?>
+		<div class="content">
+			<h2><?php echo $this->title; ?></h2>
+			<?php echo $this->content;?>
+		</div>
+		<div class="footer">
+			<p>FOOTER</p>
+		</div>
 	</main>
+	
 </body>
 </html>
