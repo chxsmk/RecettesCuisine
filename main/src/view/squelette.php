@@ -13,23 +13,19 @@
 	<header>
 		<nav>
 			<ul class="nav">
-				<li class="menu"><a href="#">Menu</a>
-					<ul class="sousMenu">
-						<?php
-							foreach ($this->getSousMenu() as $text => $link) {
-								echo "<li><a href=\"$link\">$text</a></li>";
-							}
-						?>
-					</ul>
-				</li>
-				<?php
-					foreach ($this->getMenu() as $text => $link) {
-						echo "<li><a href=\"$link\">$text</a></li>";
-					}
+				<?php 
+					echo '<li><a href=' . $this->router->homePage() .'>Accueil</a></li>';
+					echo '<li><a href=' . $this->router->getRecetteCreationURL() .'>Ajouter une recette</a></li>';
+					echo '<li>LOGO</li>';
+					echo '<li><a href='. $this->router->getFormulaireConnexionURL() . '>Se Connecter</a></li>';
 				?>
 			</ul>
 		</nav>
 		<h1>Recette de cuisine</h1>
+		<form id= "recherche" methode= "GET">
+            <input type="text" name="recherche" size= »15 placeholder="Rechercher une recette" required="required">
+            <!--<input type="submit" id= "button-submit" name="submit" value="Rechercher">-->
+        </form>
 	</header>
 	<main>
 		<div class="content">
