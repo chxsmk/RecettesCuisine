@@ -14,19 +14,21 @@
         public function showInformation($id){
             $recette = $this->recettesdb->read($id);
             if($recette != null){
+               //Si le user est connecté on appelle la funcion makeRecetteUserPage sinon on appelle la fonction makeRecettePage
                 $this->view->makeRecettePage($recette, $id);
             }
             else{
-                $this->view->makeUnknownrecettePage();
+                $this->view->makeUnknownRecettePage();
             }          
         }
 
         public function saveNewRecette(array $data){
-            $recetteBuilder = new recetteBuilder($data);
+            $recetteBuilder = new RecetteBuilder($data);
             if($recetteBuilder->isValid()){
                 $recette = $recetteBuilder->createRecette();
                 $recetteId = $this->recettesdb->create($recette);
-                //if($recetteId !==false){} // pq "recetteId" 
+                
+               //Si le user est connecté on appelle la funcion makeRecetteUserPage sinon on appelle la fonction makeRecettePage
                 $this->view->makeRecettePage($recette, $recetteId);
             }   
             else{
@@ -34,9 +36,19 @@
             }        
         }
 
-        public function listeRecettesPage(){
+        public function homeRecettesPage(){
             $recettes = $this->recettesdb->readAll();
-            $this->view->makeListPage($recettes);
+            $this->view->makeHomePage($recettes);
+        }
+
+        public function searchRecettesPage($recherche){
+            $recettesRecherche = $this->recettesdb->search($recherche);
+            if($recettesRecherche != null){
+                $this->view->makeSearchPage($recettesRecherche);
+            }
+            else{
+                $this->view->makeUnknownSearchPage();
+            }
         }
 
         public function askRecetteDeletion($id){
@@ -49,36 +61,36 @@
             }
         }
 
-        public function deleterecette($id){
+        public function deleteRecette($id){
             $ok = $this->recettesdb->delete($id);
 		    if (!$ok) {
-                $this->view->makeUnknownrecettePage();
+                $this->view->makeUnknownRecettePage();
             } else {
-                $this->view->makerecetteDeletedPage();
+                $this->view->makeRecetteDeletedPage();
             }
         }
 
         public function recetteModifications($recette, $id){
             $a = $this->recettesdb->read($id);
-            $recetteBuilder = $recette->buildFromrecette($a);
-            $this->view->makerecetteModificationPage($recetteBuilder, $id);
+            $recetteBuilder = $recette->buildFromRecette($a);
+            $this->view->makeRecetteModificationPage($recetteBuilder, $id);
         }
 
-        public function saverecetteModifications(array $data, $id) {
+        public function saveRecetteModifications(array $data, $id) {
             $recette = $this->recettesdb->read($id);
             if ($recette === null) {
-                $this->view->makeUnknownrecettePage();
+                $this->view->makeUnknownRecettePage();
             } else {
                 $recetteBuilder = new recetteBuilder($data);
                 if ($recetteBuilder->isValid()) {
-                    $recetteBuilder->updaterecette($recette);
+                    $recetteBuilder->updateRecette($recette);
                     $ok = $this->recettesdb->update($recette, $id);
                     if (!$ok)
                         throw new Exception("Identifier has disappeared?!");
                     /* Préparation de la page de la couleur */
-                    $this->view->makerecettePage($recette, $id);
+                    $this->view->makeRecettePage($recette, $id);
                 } else {
-                    $this->view->makerecetteModificationPage($recetteBuilder, $id);
+                    $this->view->makeRecetteModificationPage($recetteBuilder, $id);
                 }
             }
         }
@@ -87,7 +99,8 @@
         public function connexion(array $data){
             $connecte = $this->recettesdb->verifieConnexion($data);
             if($connecte != false){
-                return $this->view->makeHomePage();
+                $recettes = $this->recettesdb->readAll();
+                return $this->view->makeHomePage($recettes);
             }
             else{
                 echo 'Erreur';
