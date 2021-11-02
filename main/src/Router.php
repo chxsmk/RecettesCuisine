@@ -22,12 +22,8 @@
 
             if(key_exists('action', $_GET)){
                 if($_GET['action'] == 'accueil'){
-                    $view->makeHomePage();
+                    $controller->homeRecettesPage();
                 }
-                if($_GET['action'] == 'listeRecettes'){
-                    $controller->listeRecettesPage();
-                }
-
                 if($_GET['action'] == 'seConnecter'){
                     $view->makeConnexionPage();
                 }
@@ -57,18 +53,19 @@
                     }
                 }
             }
+            if(key_exists('recherche', $_GET)){
+                $recherche = htmlspecialchars($_GET['recherche']);
+                $controller->searchRecettesPage($recherche);
+            }
+
             if(empty($_GET)){
-                $view->makeHomePage();
+                $controller->homeRecettesPage();
             }
             $view->render();            
         } 
 
         public function homePage() {
             return "recettes.php?action=accueil";
-        }
-
-        public function listeRecettesPage() {
-            return "recettes.php?action=listeRecettes";
         }
         
         public function getRecetteURL($id){
@@ -100,7 +97,7 @@
         }
 
         public function getFormulaireConnexionURL(){
-            return "recettes.php?action=seConnecter";
+            return "recettes.php?recherche";
         }
         public function getConnexionURL(){
             return "recettes.php?action=connexion";
