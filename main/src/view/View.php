@@ -21,32 +21,35 @@
             include "squelette.php";
         }  
 
-        public function makeHomePage(){
+        public function makeHomePage($tableau){
             $this->title = "Bienvenue !";
-            $this->content = "<p>Voici la page d'accueil sur les recettes !</p>";
+            $this->content = "<p>Voici la liste de nos recettes !</p>";
+            $this->content .= "<ul>";
+            foreach($tableau as $key=>$value){
+                $id = $this->router->getRecetteURL($value['id']);
+                $this->content .= "<a href='" . $id . "'>" . $value['titre'] . "</a><br />";
+            }
+            $this->content .= "</ul>";
+
         }
 
         public function makeRecettePage(Recette $recette, $id){
-            $this->title = "Recette pour : " . $recette->getNom();
-            $this->content = "Voici la recette : <br /> " . $recette->getRecette() . "<br />";
+            $this->title = "Une recette écrite par : " . $recette->getNom() . " " . $recette->getPrenom();
+            $this->content = "<h3> Recette pour : " . $recette->getTitre() . "</h3>";
+            $this->content .= "<p> Voici la recette : <br /> " . $recette->getRecette() . "</p>";
+            //$this->content .= "<a href='" . $this->router->getRecetteAskDeletionURL($id) . "'> Supprimer la recette </a><br />";
+            //$this->content .= "<a href='" . $this->router->getRecetteModificationURL($id) . "'> Modifier la recette </a><br />";
+        }
+
+        public function makeRecetteUserPage(Recette $recette, $id){
+            $this->makeRecettePage($recette, $id);
             $this->content .= "<a href='" . $this->router->getRecetteAskDeletionURL($id) . "'> Supprimer la recette </a><br />";
             $this->content .= "<a href='" . $this->router->getRecetteModificationURL($id) . "'> Modifier la recette </a><br />";
         }
 
-        public function makeUnknownrecettePage(){
+        public function makeUnknownRecettePage(){
             $this->title = "Erreur";
 		    $this->content = "<p> La page demandée n'existe pas. </p>";
-        }
-
-        public function makeListPage($tableau){
-            $this->title = "Toutes les recettes";
-            $this->content = "<p>Cliquer sur un nom pour voir les détails.</p>";
-            $this->content .= "<ul>";
-            foreach($tableau as $key=>$value){
-                $id = $this->router->getRecetteURL($value['id']);
-                $this->content .= "<a href='" . $id . "'>" . $value['nom'] . "</a><br />";
-            }
-            $this->content .= "</ul>";
         }
 
         public function makeDebugPage($variable) {
@@ -54,21 +57,53 @@
             $this->content = '<pre>'.htmlspecialchars(var_export($variable, true)).'</pre>';
         }
 
-        public function makerecetteCreationPage(RecetteBuilder $builder) {
-            $nom = $builder->getNomRef();
+        public function makeSearchPage($tableau){
+            if(key_exists('recherche',$_GET)){
+                $this->title = "Recherche pour :";
+                $this->content = "<h2>" . $_GET['recherche'] . "</h2>";
+                $this->content .= "<ul>";
+                foreach($tableau as $key=>$value){
+                    $id = $this->router->getRecetteURL($value['id']);
+                    $this->content .= "<a href='" . $id . "'>" . $value['titre'] . "</a><br />";
+                }
+                $this->content .= "</ul>";
+            }
+        }
+
+        public function makeUnknownSearchPage(){
+            $this->title = "Recherche";
+            $this->content = "<p>Aucune recette ne correspond à votre recherche !</p>";
+        }
+
+        public function makeRecetteCreationPage(RecetteBuilder $builder) {
+            $nomRecette = $builder->getNomRef();
+            $prenomRecette = $builder->getPrenomRef();
+            $titreRecette = $builder->getTitreRef();
             $recette = $builder->getRecetteRef();
 
             $this->title = "Ajouter votre recette";
 
             $this->content =
-            '<form action="'. $this->router->getRecetteSaveURL() . '" method="POST">';
-            $this->content .= '<p><label>Nom de la recette :  <br /><input type="text" name="' . $nom .'" placeholder="Entrez ' . $nom . '">';
-            $errNom = $builder->getErrors($nom);
-		    if ($errNom !== null)
+            '<form action="' . $this->router->getRecetteSaveURL() . '" method="POST">';
+            $this->content .= '<p><label>Votre nom :  <br /><input type="text" name="' . $nomRecette . '" placeholder="Entrez votre ' . $nomRecette . '">';
+            $errNom = $builder->getErrors($nomRecette);
+            if ($errNom !== null)
 			    $this->content .= ' <span class="error">'. $errNom . '</span>';
             $this->content .='</label></p>';
+            
+            $this->content .= '<p><label>Votre prénom :  <br /><input type="text" name="' . $prenomRecette . '" placeholder="Entrez votre ' . $prenomRecette .'">';
+            $errPrenom = $builder->getErrors($titreRecette);
+            if ($errPrenom !== null)
+			    $this->content .= ' <span class="error">'. $errPrenom . '</span>';
+            $this->content .='</label></p>';
 
-            $this->content .= '<p><label>Etapes de la recette :  <br /><textarea name="recette" placeholder="Entrez la ' . $recette . '" rows="15" cols="50"></textarea>';
+            $this->content .= '<p><label>Nom de la recette :  <br /><input type="text" name="' . $titreRecette . '" placeholder="Entrez ' . $titreRecette . '">';
+            $errTitre = $builder->getErrors($titreRecette);
+		    if ($errTitre !== null)
+			    $this->content .= ' <span class="error">'. $errTitre . '</span>';
+            $this->content .='</label></p>';
+            
+            $this->content .= '<p><label>Etapes de la recette :  <br /><textarea name="' . $recette . '" placeholder="Entrez la ' . $recette . '" rows="15" cols="50"></textarea>';
             $errRecette = $builder->getErrors($recette);
             if ($errRecette !== null)
                 $this->content .= ' <span class="error">'. $errRecette . '</span>';
@@ -78,7 +113,7 @@
             </form>';
         }
 
-        public function makerecetteDeletionPage($id) {   
+        public function makeRecetteDeletionPage($id) {   
              
             $this->title = "Suppression de la recette";
             $this->content = "<p>La recette va être supprimée.</p>\n";
@@ -86,23 +121,37 @@
             $this->content .= "<button>Confirmer</button>\n</form>\n";
         }
     
-        public function makerecetteDeletedPage() {
+        public function makeRecetteDeletedPage() {
             $this->title = "Suppression effectuée";
             $this->content = "<p>La recette a bien été correctement supprimée.</p>";
         }
 
-        public function makerecetteModificationPage(RecetteBuilder $builder, $id) {
-            $nom = $builder->getNomRef();
+        public function makeRecetteModificationPage(RecetteBuilder $builder, $id) {
+            $nomRecette = $builder->getNomRef();
+            $prenomRecette = $builder->getPrenomRef();
+            $titreRecette = $builder->getTitreRef();
             $recette = $builder->getRecetteRef();
 
             $this->title = "Modifier la recette";
 
             $this->content = 
             '<form action="' . $this->router->updateModificationRecette($id) . '" method="POST">';
-            $this->content .= '<p><label>Nom de la recette :  <br /><input type="text" name="' . $nom .'" value="' . $builder->getData($nom) . '">';
-            $errNom = $builder->getErrors($nom);
-		    if ($errNom !== null)
+            $this->content .= '<p><label>Votre nom :  <br /><input type="text" name="' . $nomRecette .'" value="' . $builder->getData($nomRecette) . '">';
+            $errNom = $builder->getErrors($nomRecette);
+            if ($errNom !== null)
 			    $this->content .= ' <span class="error">'. $errNom . '</span>';
+            $this->content .='</label></p>';
+
+            $this->content .= '<p><label>Votre prénom :  <br /><input type="text" name="' . $prenomRecette .'" value="' . $builder->getData($prenomRecette) . '">';
+            $errPrenom = $builder->getErrors($titreRecette);
+            if ($errPrenom !== null)
+			    $this->content .= ' <span class="error">'. $errPrenom . '</span>';
+            $this->content .='</label></p>';
+
+            $this->content .= '<p><label>Nom de la recette :  <br /><input type="text" name="' . $titreRecette .'" value="' . $builder->getData($titreRecette) . '">';
+            $errTitre = $builder->getErrors($titreRecette);
+		    if ($errTitre !== null)
+			    $this->content .= ' <span class="error">'. $errTitre . '</span>';
             $this->content .='</label></p>';
             
             $this->content .= '<p><label>Etapes de la recette :  <br /><textarea name="recette" rows="15" cols="50">' . $builder->getData($recette) . '</textarea>';
@@ -112,31 +161,6 @@
             $this->content .='</label></p>
 
             <button>Modifier</button></form>';
-        }
-
-        /*protected function getMenu() {
-            return array(
-                "Accueil" => $this->router->homePage(),
-                "La liste des Recettes" => $this->router->listeRecettesPage(),
-                "Ajouter une nouvelle recette" => $this->router->getRecetteCreationURL(),
-            );
-        }*/
-
-        protected function getMenu(){
-            return array(
-                "LOGO" => '#',//image
-                "<input type='text' placeholder='Search...(En option)'>" => '#',
-                "Se Connecter" => $this->router->getFormulaireConnexionURL(),
-            );
-        }
-
-        //mettre l'option ajouter new recette dans le content de la page liste recettes
-        protected function getSousMenu(){
-            return array(
-                "Accueil" => $this->router->homePage(),
-                "La liste des Recettes" => $this->router->listeRecettesPage(),
-                "Ajouter une nouvelle recette" => $this->router->getRecetteCreationURL(),
-            );
         }
 
         public function makeConnexionPage(){
@@ -161,6 +185,16 @@
                     echo '<p style="color:red">Utilisateur ou mot de passe incorrect</p>';
             }*/
         }
+
+        //mettre l'option ajouter new recette dans le content de la page liste recettes
+        /*protected function getSousMenu(){
+            return array(
+                "Ajouter une nouvelle recette" => $this->router->getRecetteCreationURL(),
+                "Modifier une recette" => $this->router->homePage(),
+                "Supprimer une recette" => $this->router->getRecetteAskDeletionURL(),
+            );
+        }*/
+
 
     
     }
