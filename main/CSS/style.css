@@ -5,19 +5,12 @@ html {
     background-attachment: fixed;
     background-size: cover;
 	background-repeat: no-repeat;
-    text-align: center;
 }
 
-header{
-    padding: 100px;
-    /*background-image: url("../images/img_recette.png");
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../images/img_recette.png");
-    background-attachment: fixed;*/
-}
-
+/*Partie du menu*/
 nav > ul{
     display: grid;
-	grid-template-columns: 1fr 1fr 3fr 1fr;
+	grid-template-columns: 4fr 4fr 4fr 1fr;
 	font-family: Impact;
 	top: 0;
 	left: 0;
@@ -85,7 +78,32 @@ nav ul li{
 a{
     text-decoration: none;
 }
+/*Partie du header*/
+header{
+    padding: 100px;
+    padding-bottom: 10px;
+}
 
+h1{
+    color: white;
+    text-align: center;
+}
+
+/*Partie de la barre de recherche*/
+
+#recherche{
+    margin-left: 40%;
+    margin-top: 50px;
+}
+
+#recherche input{
+    border-radius: 40px;
+    padding: 7px;
+    padding-right: 65px;
+    border: none;
+}
+
+/*Partie du main*/
 main{
     background-color: white;
     max-width: 85%;
@@ -96,11 +114,6 @@ main{
     left: 0;
     right: 0;*/
 }
-
-h1{
-    color: white;
-}
-
 .content{
     margin-bottom: 50%;
 }
@@ -112,3 +125,5 @@ h1{
     right: 0;
     left: 0;*/
 }
+
+
