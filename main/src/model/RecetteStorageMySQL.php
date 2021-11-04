@@ -5,7 +5,7 @@
 
     class RecetteStorageMySQL implements RecetteStorage{
         protected $db;
-        
+
         public function __construct($db) {
             $this->db = $db;
         }
@@ -20,7 +20,7 @@
             }
             else{
                 return null;
-            } 
+            }
         }
 
         public function readAll(){
@@ -30,9 +30,6 @@
         }
 
         public function create(Recette $recette){
-            $photoRef = $recette->getPhotosRef;
-            $photos1 = file_get_contents ($_FILES[$photoRef]['tmp_name']);
-            $photos = addslashes($photos1);
             $requete = $this->db->prepare('INSERT INTO recettes (nom, prenom, titre, recette, photos) VALUES (:nom, :prenom, :titre, :recette, :photos)');
             $requete->execute(array(":nom" => $recette->getNom(), ":prenom" => $recette->getPrenom(), ":titre" => $recette->getTitre(), ":recette" => $recette->getRecette(),":photos" => $recette->getPhotos()));
             return $this->db->lastInsertId();
@@ -80,4 +77,3 @@
         }
     }
 ?>
-       

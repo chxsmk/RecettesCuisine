@@ -15,20 +15,20 @@
         }
 
         //Accesseurs
-        public function getNom() { 
-            return $this->nom; 
+        public function getNom() {
+            return $this->nom;
         }
-        public function getPrenom() { 
-            return $this->prenom; 
+        public function getPrenom() {
+            return $this->prenom;
         }
-        public function getTitre() { 
-            return $this->titre; 
+        public function getTitre() {
+            return $this->titre;
         }
-        public function getRecette() { 
-            return $this->recette; 
+        public function getRecette() {
+            return $this->recette;
         }
         public function getPhotos() {
-            return $this->photos;
+          return $this->photos;
         }
 
         //Mutateurs
@@ -72,7 +72,7 @@
 
         public static function isTitreValid($titre) {
             return $titre !== "";
-        }        
+        }
 
         public static function isRecetteValid($recette) {
             return $recette !== "";

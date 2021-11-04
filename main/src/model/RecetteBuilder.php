@@ -20,10 +20,15 @@
         }
 
         public function createRecette(){
-            if(!key_exists("nom", $this->data) || !key_exists("prenom", $this->data) || !key_exists("titre", $this->data) || !key_exists("recette", $this->data)|| !key_exists("photos", $this->data)){
+
+          $photo = isset($_FILES[$this->data['photos']]['tmp_name'])? $_FILES[$this->data['photos']]['tmp_name'] : NULL;
+          if(!key_exists("nom", $this->data) || !key_exists("prenom", $this->data) || !key_exists("titre", $this->data) || !key_exists("recette", $this->data)|| !key_exists("photos", $this->data)){
 			    throw new Exception("Il manque un paramètre pour créer une recette !");
-            }
-            return new Recette($this->data['nom'],$this->data['prenom'],$this->data['titre'], $this->data['recette'], $this->data['photos']);
+          }
+            $photo=file_get_contents($photo);
+            $photo=addslashes($photo);
+
+            return new Recette($this->data['nom'],$this->data['prenom'],$this->data['titre'], $this->data['recette'], $photo);
         }
 
         public function isValid() {
@@ -57,7 +62,7 @@
         public function getTitreRef() {
             return "titre";
         }
-        
+
         public function getRecetteRef() {
             return "recette";
         }
@@ -65,7 +70,7 @@
         public function getPhotosRef() {
             return "photos";
         }
-        
+
         public function getErrors($ref) {
             return key_exists($ref, $this->errors)? $this->errors[$ref]: null;
         }
@@ -95,15 +100,15 @@
             else{
                 return null;
             }
-        }   
-        
+        }
+
         public function buildFromRecette(recette $recette){
             $data = array(
                 'nom' => $recette->getNom(),
                 'prenom' => $recette->getPrenom(),
                 'titre' => $recette->getTitre(),
                 'recette' => $recette->getRecette()
-                'photos' => $recette->getPhotos()
+                //'photos' => $recette->getPhotos(),
             );
             return new self($data);
         }
