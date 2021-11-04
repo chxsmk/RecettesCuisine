@@ -4,26 +4,31 @@
         public $prenom;
         public $titre;
         public $recette;
+        public $photos;
 
-        public function __construct($nom, $prenom, $titre, $recette) {
+        public function __construct($nom, $prenom, $titre, $recette, $photos) {
             $this->nom = $nom;
             $this->prenom = $prenom;
             $this->titre = $titre;
             $this->recette = $recette;
+            $this->photos = $photos;
         }
 
         //Accesseurs
-        public function getNom() { 
-            return $this->nom; 
+        public function getNom() {
+            return $this->nom;
         }
-        public function getPrenom() { 
-            return $this->prenom; 
+        public function getPrenom() {
+            return $this->prenom;
         }
-        public function getTitre() { 
-            return $this->titre; 
+        public function getTitre() {
+            return $this->titre;
         }
-        public function getRecette() { 
-            return $this->recette; 
+        public function getRecette() {
+            return $this->recette;
+        }
+        public function getPhotos() {
+          return $this->photos;
         }
 
         //Mutateurs
@@ -50,6 +55,11 @@
                 throw new Exception("La recette n'existe pas");
             $this->recette = $recette;
         }
+        public function setPhotos($photos) {
+            if (!self::isPhotosValid($photos))
+                throw new Exception("La photo n'existe pas");
+            $this->photos = $photos;
+        }
 
         //Verification
         public static function isNomValid($nom) {
@@ -62,10 +72,13 @@
 
         public static function isTitreValid($titre) {
             return $titre !== "";
-        }        
+        }
 
         public static function isRecetteValid($recette) {
             return $recette !== "";
+        }
+        public static function isPhotosValid($photos) {
+            return $photos !== "";
         }
     }
 ?>

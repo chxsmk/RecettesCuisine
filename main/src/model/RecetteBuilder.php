@@ -12,6 +12,7 @@
                     "prenom" => "",
                     "titre" => "",
                     "recette" => "",
+                    "photos" => "",
                 );
             }
             $this->data = $data;
@@ -19,10 +20,15 @@
         }
 
         public function createRecette(){
-            if(!key_exists("nom", $this->data) || !key_exists("prenom", $this->data) || !key_exists("titre", $this->data) || !key_exists("recette", $this->data)){
+
+          $photo = isset($_FILES[$this->data['photos']]['tmp_name'])? $_FILES[$this->data['photos']]['tmp_name'] : NULL;
+          if(!key_exists("nom", $this->data) || !key_exists("prenom", $this->data) || !key_exists("titre", $this->data) || !key_exists("recette", $this->data)|| !key_exists("photos", $this->data)){
 			    throw new Exception("Il manque un paramètre pour créer une recette !");
-            }
-            return new Recette($this->data['nom'],$this->data['prenom'],$this->data['titre'], $this->data['recette']);
+          }
+            $photo=file_get_contents($photo);
+            $photo=addslashes($photo);
+
+            return new Recette($this->data['nom'],$this->data['prenom'],$this->data['titre'], $this->data['recette'], $photo);
         }
 
         public function isValid() {
@@ -39,6 +45,9 @@
             if (!key_exists("recette", $this->data) || $this->data["recette"] === ""){
                 $this->errors["recette"] = "Vous devez entrer la recette !";
             }
+            if (!key_exists("photos", $this->data) || $this->data["photos"] === ""){
+                $this->errors["photos"] = "Vous devez uploader une photo !";
+            }
             return count($this->errors) === 0;
         }
 
@@ -53,11 +62,15 @@
         public function getTitreRef() {
             return "titre";
         }
-        
+
         public function getRecetteRef() {
             return "recette";
         }
-        
+
+        public function getPhotosRef() {
+            return "photos";
+        }
+
         public function getErrors($ref) {
             return key_exists($ref, $this->errors)? $this->errors[$ref]: null;
         }
@@ -75,6 +88,9 @@
             if (key_exists("recette", $this->data)){
                 $recette->setRecette($this->data["recette"]);
             }
+            if (key_exists("photos", $this->data)){
+                $recette->setPhotos($this->data["photos"]);
+            }
         }
 
         public function getData($ref){
@@ -84,14 +100,15 @@
             else{
                 return null;
             }
-        }   
-        
+        }
+
         public function buildFromRecette(recette $recette){
             $data = array(
                 'nom' => $recette->getNom(),
                 'prenom' => $recette->getPrenom(),
                 'titre' => $recette->getTitre(),
                 'recette' => $recette->getRecette()
+                //'photos' => $recette->getPhotos(),
             );
             return new self($data);
         }
