@@ -6,7 +6,7 @@
         public $recette;
         public $photos;
 
-        public function __construct($nom, $prenom, $titre, $recette) {
+        public function __construct($nom, $prenom, $titre, $recette, $photos) {
             $this->nom = $nom;
             $this->prenom = $prenom;
             $this->titre = $titre;
