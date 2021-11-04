@@ -19,11 +19,11 @@
 
         public function render(){
             include "squelette.php";
-        }  
+        }
 
         public function makeHomePage($tableau){
             $this->title = "Bienvenue !";
-            $this->content = "<p>Voici la liste de nos recettes !</p>";
+            $this->content = "<p>Dernières recettes</p>";
             $this->content .= "<ul>";
             foreach($tableau as $key=>$value){
                 $id = $this->router->getRecetteURL($value['id']);
@@ -92,7 +92,7 @@
             if ($errNom !== null)
 			    $this->content .= ' <span class="error">'. $errNom . '</span>';
             $this->content .='</label></p>';
-            
+
             $this->content .= '<p><label>Votre prénom :  <br /><input type="text" name="' . $prenomRecette . '" placeholder="Entrez votre ' . $prenomRecette .'">';
             $errPrenom = $builder->getErrors($titreRecette);
             if ($errPrenom !== null)
@@ -104,7 +104,7 @@
 		    if ($errTitre !== null)
 			    $this->content .= ' <span class="error">'. $errTitre . '</span>';
             $this->content .='</label></p>';
-            
+
             $this->content .= '<p><label>Etapes de la recette :  <br /><textarea name="' . $recette . '" placeholder="Entrez la ' . $recette . '" rows="15" cols="50"></textarea>';
             $errRecette = $builder->getErrors($recette);
             if ($errRecette !== null)
@@ -121,14 +121,14 @@
             </form>';
         }
 
-        public function makeRecetteDeletionPage($id) {   
-             
+        public function makeRecetteDeletionPage($id) {
+
             $this->title = "Suppression de la recette";
             $this->content = "<p>La recette va être supprimée.</p>\n";
             $this->content .= '<form action="'. $this->router->getRecetteDeletionURL($id) .'" method="POST">';
             $this->content .= "<button>Confirmer</button>\n</form>\n";
         }
-    
+
         public function makeRecetteDeletedPage() {
             $this->title = "Suppression effectuée";
             $this->content = "<p>La recette a bien été correctement supprimée.</p>";
@@ -143,7 +143,7 @@
 
             $this->title = "Modifier la recette";
 
-            $this->content = 
+            $this->content =
             '<form action="' . $this->router->updateModificationRecette($id) . '" method="POST">';
             $this->content .= '<p><label>Votre nom :  <br /><input type="text" name="' . $nomRecette .'" value="' . $builder->getData($nomRecette) . '">';
             $errNom = $builder->getErrors($nomRecette);
@@ -162,7 +162,7 @@
 		    if ($errTitre !== null)
 			    $this->content .= ' <span class="error">'. $errTitre . '</span>';
             $this->content .='</label></p>';
-            
+
             $this->content .= '<p><label>Etapes de la recette :  <br /><textarea name="recette" rows="15" cols="50">' . $builder->getData($recette) . '</textarea>';
             $errRecette = $builder->getErrors($recette);
             if ($errRecette !== null)
@@ -181,9 +181,9 @@
         public function makeConnexionPage(){
             $this->title = "Se connecter";
 
-            $this->content = 
+            $this->content =
             '<form action="' . $this->router->getConnexionURL() . '" method="POST">
-            
+
             <label><b>Utilisateur</b></label><br />
             <input type="text" placeholder="Entrez utilisateur" name="username" required><br />
 
@@ -211,6 +211,6 @@
         }*/
 
 
-    
+
     }
 ?>

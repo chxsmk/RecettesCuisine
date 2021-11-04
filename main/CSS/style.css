@@ -1,7 +1,7 @@
 /*Désactivé le cache dans réseau pour actualisé le css*/
 html {
 	overflow-y: auto;
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url("../images/img_recette.jpg");
+    background-image: url("../src/images/background.jpg");
     background-attachment: fixed;
     background-size: cover;
 	background-repeat: no-repeat;
@@ -68,31 +68,45 @@ nav > ul li:hover .sousMenu{
     position: absolute;
     z-index: 1000;
 }
+#accueil{
+	color : #d27910;
+}
 
 nav ul li{
     float: left;
     width: 25%;
     position: relative;
+		font-family: 'Raleway', sans-serif;
 }
+nav{
+	font-size: 20px;
 
+}
 a{
     text-decoration: none;
+
 }
 /*Partie du header*/
 header{
     padding: 100px;
     padding-bottom: 10px;
 }
-
 h1{
-    color: white;
-    text-align: center;
+
+	text-align: center;
+	font-family: 'Raleway', sans-serif;
+
+	color: white;
+	font-size: 80px;
 }
-
 /*Partie de la barre de recherche*/
-
+h2{
+	color: #C5E300;
+	font-family: 'Lato', sans-serif;
+	font-size: 50px;
+}
 #recherche{
-    margin-left: 40%;
+		margin-left: 40%;
     margin-top: 50px;
 }
 
@@ -125,5 +139,3 @@ main{
     right: 0;
     left: 0;*/
 }
-
-
