@@ -37,6 +37,7 @@
             $this->title = "Une recette écrite par : " . $recette->getNom() . " " . $recette->getPrenom();
             $this->content = "<h3> Recette pour : " . $recette->getTitre() . "</h3>";
             $this->content .= "<p> Voici la recette : <br /> " . $recette->getRecette() . "</p>";
+            $this->content .= "<p> Voici une photo de celle-ci:</p>";
             //$this->content .= "<a href='" . $this->router->getRecetteAskDeletionURL($id) . "'> Supprimer la recette </a><br />";
             //$this->content .= "<a href='" . $this->router->getRecetteModificationURL($id) . "'> Modifier la recette </a><br />";
         }
@@ -80,6 +81,7 @@
             $prenomRecette = $builder->getPrenomRef();
             $titreRecette = $builder->getTitreRef();
             $recette = $builder->getRecetteRef();
+            $photosRecette= $builder->getPhotosRef();
 
             $this->title = "Ajouter votre recette";
 
@@ -107,9 +109,15 @@
             $errRecette = $builder->getErrors($recette);
             if ($errRecette !== null)
                 $this->content .= ' <span class="error">'. $errRecette . '</span>';
-            $this->content .='</label></p>
+            $this->content .='</label></p>';
 
-            <p><input type="submit" value="Envoyer"></p>
+            $this->content .= '<p><label>Photos de la recette: <input type="file" name="'.$photosRecette.'" size=50>'.
+            $errRecette = $builder->getErrors($recette);
+            if ($errRecette !== null)
+                $this->content .= ' <span class="error">'. $errRecette . '</span>';
+            $this->content .='</label></p>';
+
+            '<p><input type="submit" value="Envoyer"></p>
             </form>';
         }
 
@@ -131,6 +139,7 @@
             $prenomRecette = $builder->getPrenomRef();
             $titreRecette = $builder->getTitreRef();
             $recette = $builder->getRecetteRef();
+            $photosRecette= $builder->getPhotosRef();
 
             $this->title = "Modifier la recette";
 
@@ -158,9 +167,15 @@
             $errRecette = $builder->getErrors($recette);
             if ($errRecette !== null)
                 $this->content .= ' <span class="error">'. $errRecette . '</span>';
-            $this->content .='</label></p>
+            $this->content .='</label></p>';
 
-            <button>Modifier</button></form>';
+            $this->content .= '<p><label>Photos de la recette: <input type="file" name="'.$photosRecette.'" size=50>'.
+            $errRecette = $builder->getErrors($recette);
+            if ($errRecette !== null)
+                $this->content .= ' <span class="error">'. $errRecette . '</span>';
+            $this->content .='</label></p>';
+
+            '<button>Modifier</button></form>';
         }
 
         public function makeConnexionPage(){

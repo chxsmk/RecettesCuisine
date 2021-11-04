@@ -15,7 +15,7 @@
             $requete->execute([":id" => $id]);
             $resultat = $requete->fetch();
             if($resultat!==false){
-                $recette = new Recette($resultat['nom'], $resultat['prenom'], $resultat['titre'], $resultat['recette']);
+                $recette = new Recette($resultat['nom'], $resultat['prenom'], $resultat['titre'], $resultat['recette'], $resultat['photos']);
                 return $recette;
             }
             else{
@@ -30,8 +30,11 @@
         }
 
         public function create(Recette $recette){
-            $requete = $this->db->prepare('INSERT INTO recettes (nom, prenom, titre, recette) VALUES (:nom, :prenom, :titre, :recette)');
-            $requete->execute(array(":nom" => $recette->getNom(), ":prenom" => $recette->getPrenom(), ":titre" => $recette->getTitre(), ":recette" => $recette->getRecette()));
+            $photoRef = $recette->getPhotosRef;
+            $photos1 = file_get_contents ($_FILES[$photoRef]['tmp_name']);
+            $photos = addslashes($photos1);
+            $requete = $this->db->prepare('INSERT INTO recettes (nom, prenom, titre, recette, photos) VALUES (:nom, :prenom, :titre, :recette, :photos)');
+            $requete->execute(array(":nom" => $recette->getNom(), ":prenom" => $recette->getPrenom(), ":titre" => $recette->getTitre(), ":recette" => $recette->getRecette(),":photos" => $recette->getPhotos()));
             return $this->db->lastInsertId();
         }
 
@@ -48,8 +51,8 @@
         }
 
         public function update(Recette $recette, $id) {
-            $requete = $this->db->prepare('UPDATE recettes SET nom= :nom, prenom= :prenom, titre= :titre, recette= :recette WHERE id= :id');
-            return $requete->execute(array(":nom" => $recette->getNom(), ":prenom" => $recette->getPrenom(), ":titre" => $recette->getTitre(), ":recette" => $recette->getRecette(), "id" => $id));
+            $requete = $this->db->prepare('UPDATE recettes SET nom= :nom, prenom= :prenom, titre= :titre, recette= :recette, photos= :photos WHERE id= :id');
+            return $requete->execute(array(":nom" => $recette->getNom(), ":prenom" => $recette->getPrenom(), ":titre" => $recette->getTitre(), ":recette" => $recette->getRecette(), ":photos" => $recette->getPhotos(), "id" => $id));
         }
 
         //vélifie si les données entrées par l'utilisateur sont dans la bd.

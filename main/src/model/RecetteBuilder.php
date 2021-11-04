@@ -12,6 +12,7 @@
                     "prenom" => "",
                     "titre" => "",
                     "recette" => "",
+                    "photos" => "",
                 );
             }
             $this->data = $data;
@@ -19,10 +20,10 @@
         }
 
         public function createRecette(){
-            if(!key_exists("nom", $this->data) || !key_exists("prenom", $this->data) || !key_exists("titre", $this->data) || !key_exists("recette", $this->data)){
+            if(!key_exists("nom", $this->data) || !key_exists("prenom", $this->data) || !key_exists("titre", $this->data) || !key_exists("recette", $this->data)|| !key_exists("photos", $this->data)){
 			    throw new Exception("Il manque un paramètre pour créer une recette !");
             }
-            return new Recette($this->data['nom'],$this->data['prenom'],$this->data['titre'], $this->data['recette']);
+            return new Recette($this->data['nom'],$this->data['prenom'],$this->data['titre'], $this->data['recette'], $this->data['photos']);
         }
 
         public function isValid() {
@@ -38,6 +39,9 @@
             }
             if (!key_exists("recette", $this->data) || $this->data["recette"] === ""){
                 $this->errors["recette"] = "Vous devez entrer la recette !";
+            }
+            if (!key_exists("photos", $this->data) || $this->data["photos"] === ""){
+                $this->errors["photos"] = "Vous devez uploader une photo !";
             }
             return count($this->errors) === 0;
         }
@@ -57,6 +61,10 @@
         public function getRecetteRef() {
             return "recette";
         }
+
+        public function getPhotosRef() {
+            return "photos";
+        }
         
         public function getErrors($ref) {
             return key_exists($ref, $this->errors)? $this->errors[$ref]: null;
@@ -75,6 +83,9 @@
             if (key_exists("recette", $this->data)){
                 $recette->setRecette($this->data["recette"]);
             }
+            if (key_exists("photos", $this->data)){
+                $recette->setPhotos($this->data["photos"]);
+            }
         }
 
         public function getData($ref){
@@ -92,6 +103,7 @@
                 'prenom' => $recette->getPrenom(),
                 'titre' => $recette->getTitre(),
                 'recette' => $recette->getRecette()
+                'photos' => $recette->getPhotos()
             );
             return new self($data);
         }
