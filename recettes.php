@@ -25,3 +25,4 @@ $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 $recettes = new RecetteStorageMySQL($dbh);
 $recettes = new Router($recettes);
 $recettes->main();
+//test
