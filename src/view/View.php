@@ -34,11 +34,11 @@ class View
         $this->content = "<p>Voici la liste de nos dernières recettes !</p>";
         $this->content .= "<div class='listeRecettes'>";
         foreach ($tableau as $key => $value) {
-            $this->content .= "<div class='recette'>";
+            $this->content .= "<figure class='recette'>";
             $id = $this->router->getRecetteURL($value['id']);
-            $this->content .= '<img src="imagesUsers/' . $value['image'] . '" name="image">';
-            $this->content .= "<a href='" . $id . "'>" . $value['titre'] . "</a>";
-            $this->content .= "</div>";
+            $this->content .= '<img src="imagesUsers/' . $value['image'] . '" name="image" alte="image de la recette">';
+            $this->content .= "<figcaption><a href='" . $id . "'>" . $value['titre'] . "</a></figcaption>";
+            $this->content .= "</figure>";
         }
         $this->content .= "</div>";
     }
@@ -144,7 +144,6 @@ class View
 
     public function makeRecetteDeletionPage($id)
     {
-
         $this->title = "Suppression de la recette";
         $this->content = "<p>La recette va être supprimée.</p>";
         $this->content .= '<form action="' . $this->router->getRecetteDeletionURL($id) . '" method="POST">';
@@ -192,6 +191,14 @@ class View
         $this->content = '<form action="' . $this->router->getConnexionURL() . '" method="POST">';
         $this->content .= self::makeConnexionForm();
         $this->content .= '<input type="submit" id="submit" value="Se connecter" > </form>';
+    }
+    public function makeExistComptePage()
+    {
+        $this->title = "Inscription";
+        $this->content = "Le compte existe déjà. Veuillez choisir un autre nom d'utilisateur ou mot de passes :<br />";
+        $this->content .= '<form action="' . $this->router->getInscritionURL() . '" method="POST">';
+        $this->content .= self::makeConnexionForm();
+        $this->content .= '<input type="submit" id="submit" value="Créer" ></form>';
     }
 
     public function makeAProposPage()

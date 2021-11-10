@@ -125,17 +125,19 @@ main{
 
 .listeRecettes{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .recette{
-    background-color: beige;
     margin: 10px;
+    text-align: center;
 }
 
 img{
-    max-height: 300px;
+    width: 230px;
+    height: 200px;
 }
+
 /*Partie du footer*/
 footer{
     background: #C5E300;

@@ -66,36 +66,22 @@ class RecetteStorageMySQL implements RecetteStorage
 
     public function addNewIncription($data)
     {
+        $mdp = password_hash($data['password'], PASSWORD_DEFAULT);
         $requete = $this->db->prepare('INSERT INTO users (utilisateur, mdp) VALUES (:utilisateur, :mdp)');
 
-        $requete->execute(array(":utilisateur" => $data['username'], ":mdp" => $data['password']));
+        $requete->execute(array(":utilisateur" => $data['username'], ":mdp" => $mdp));
         return $this->db->lastInsertId();
     }
 
     public function verification($data)
     {
-        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :utilisateur AND mdp= :mdp');
-        $requete->execute(array(":utilisateur" => $data['username'], ":mdp" => $data['password']));
-
-        //renvoie tab null si false ou la ligne user si true
+        $requete = $this->db->prepare('SELECT mdp FROM users WHERE utilisateur= :utilisateur');
+        $requete->execute(array(":utilisateur" => $data['username']));
         $resultat = $requete->fetch();
-        return $resultat;
-
-        /*
-        
-            $utilisateur = $data['username'];
-            $mdp = $data['password'];
-            $requete ='SELECT * FROM users WHERE utilisateur= "' . $utilisateur . '" AND mdp= "' . $mdp . '"');
-            $requete= $this->db->query($utilisateur, $mdp);
-            $reponse =  $this->db->fetch_array($requete);
-            $count = $reponse['count(*)'];
-            if($count!=0){
-                $_SESSION['username'] = $data['username'];
-                header('Location: recettes.php');
+        if ($resultat) {
+            if (password_verify($data['password'], $resultat['mdp'])) {
+                return $resultat;
             }
-            else{
-                header('Location: login.php?erreur=1');
-            }
-            */
+        }
     }
 }

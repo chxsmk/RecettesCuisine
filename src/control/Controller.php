@@ -120,8 +120,8 @@ class Controller
     {
         $connecte = $this->recettesdb->verification($data);
         if ($connecte != null) {
-            //compte existe
-            $this->view->makeConnexionPage();
+            //compte existe 
+            $this->view->makeExistComptePage();
         } else {
             //Ajout à la bd
             $this->recettesdb->addNewIncription($data);
