@@ -204,22 +204,21 @@ class View
     public function makeAProposPage()
     {
         $this->title = "À propos de nous";
-        $this->content = "<p>Nous sommes dans le groupe 25. Notre groupe est composé de : <br /> 
-        Manon JAMES (22000089) et de Chamora SAMAKON (21903735).</p>";
+        $this->content = "<p>Nous sommes dans le groupe 25. Notre groupe est composé de : Manon JAMES (22000089) et de Chamora SAMAKON (21903735).</p>";
 
         $this->content .= "<h3>Les points réalisés :</h3>";
         $this->content .= "<p>Lors de ce projet, nous devions faire un site qui utilise l'architecture MVCR que nous avons vue en cours et en TP. 
         Nous avons donc décidé de reprendre le tp concernant les animals que nous avons fait, en l'adaptant de façon à ce qu'il corresponde à ce dont nous aurons besoin pour réaliser notre projet. <br />
         BLABLABLA</p>";
         $this->content .= "<p>En ce qui concerne les compléments nous devions en choisir 3 parmis la liste ci-dessous :</p>
-        <ul>
+        <ol>
             <li>(*) Une recherche d'objets.</li>
             <li>Associer des images aux objets (en choisir un seul parmi les trois) :
-                <ul> 
+                <ol> 
                     <li>(*) Un objet peut être illustré par une image (et une seule, non modifiable) uploadée par le créateur de l'objet.</li>
                     <li>(***) Un objet peut être illustré par zéro, une ou plusieurs images (modifiables) uploadées par le créateur de l'objet.</li>
                     <li>(****) Un objet peut être illustré par une (ou plusieurs) images (modifiables), uploadées par le créateur de l'objet et l'upload de cette image aura une barre de progression.</li>
-                </ul>
+                </ol>
             </li>
             <li>(**) Site responsive</li>
             <li>(*) Tri de la liste des objets (par date etc).</li>
@@ -228,11 +227,14 @@ class View
             <li>(***) Commentaires sur un objet.</li>
             <li>(**) Dans le formulaire d'inscription, vérification en temps réel de la disponibilité du login (par exemple lorsque le focus quitte le champ login).</li>
             <li>(***) Fonctionnalité rester connecté, avec une durée de validité (plusieurs jours par exemple) paramétrable par l'administrateur du site.</li>
-        </ul>
-        <p>Nous avons donc choisit : </p>";
+        </ol>
+        <p>Nous avons donc choisit : </p>
+        <p>Une recherche d'objets. (1) et  Associer des images aux objets(2.2).</p>";
 
         $this->content .= "<h3>La répartition des tâches :</h3>";
-        $this->content .= "<p>blablabla</p>";
+        $this->content .= "<p>Les tps de concernant la création d'un site web sur les animaaux nous ont beaucoup servit. 
+        Comme Chamora avait terminé tous le tp sur le site des animaux, elle a reprit son code et l'a adapté de façon à ce que ça conrrespond à ce dont nous aurions besoin pour réalisé notre site. 
+        De ce fait, il nous restait plus que l'authentification des utilisateurs et les compléments à réalisé.</p>";
 
         $this->content .= "<h3>Quelques explications concernant nos choix en matière de design, modélisation, code, etc... :</h3>";
         $this->content .= "<p>sblablabla</p>";
