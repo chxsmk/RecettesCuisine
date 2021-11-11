@@ -32,6 +32,7 @@
 				} else {
 					echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
 				}
+				echo '<li><a href="' . $this->router->getAdminURL() . '">Espace administrateur</a></li>';
 				?>
 			</ul>
 		</nav>

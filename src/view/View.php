@@ -43,13 +43,13 @@ class View
         $this->content .= "</div>";
     }
 
-    public function makeRecettePage(Recette $recette, $id)
+    public function makeRecettePage(Recette $recette, $id,$admin)
     {
         $this->title = 'Une recette écrite par : ' . $recette->getUtilisateur();
         $this->content = '<h3> Recette pour : ' . $recette->getTitre() . '</h3>';
         $this->content .= '<p> Voici la recette : <br />' . $recette->getRecette() . '</p>';
         $this->content .= '<img src="imagesUsers/' . $recette->getImage() . '" name="image"><br />';
-        if ($_SESSION['username'] == $recette->getUtilisateur()) {
+        if ($_SESSION['username'] == $recette->getUtilisateur()||$admin==true) {
             $this->content .= '<a href="' . $this->router->getRecetteAskDeletionURL($id) . '"> Supprimer la recette </a><br />';
             $this->content .= '<a href="' . $this->router->getRecetteModificationURL($id) . '"> Modifier la recette </a><br />';
         }
@@ -168,6 +168,11 @@ class View
         </ul>';
     }
 
+    public function makeNoAdminPage()
+    {
+        $this->title = "Vous n'êtes pas administrateur! Accès non autorisé.";
+    }
+
     public static function makeConnexionForm()
     {
         $content = '<label><b>Utilisateur</b></label><br />
@@ -175,6 +180,12 @@ class View
         <label><b>Mot de passe</b></label><br />
         <input type="password" placeholder="Entrer le mot de passe" name="password" required><br />';
         return $content;
+    }
+
+    public static function makeDeletionForm(){
+      $content = '<label><b>Entrez un utilisateur à supprimer</b></label><br />
+      <input type="text" placeholder="Utilisateur" name="utilisateur" required><br />';
+      return $content;
     }
 
     public function makeInscriptionPage()
@@ -192,6 +203,19 @@ class View
         $this->content .= self::makeConnexionForm();
         $this->content .= '<input type="submit" id="submit" value="Se connecter" > </form>';
     }
+    public function makeUserDeletionPage()
+    {
+      $this->title = "Supprimer un utilisateur";
+      $this->content = '<form action="' . $this->router->getUserDeletionURL() . '" method="POST">';
+      $this->content .= self::makeDeletionForm();
+      $this->content .= '<input type="submit" id="submit" value="Supprimer" > </form>';
+    }
+
+    public function makeUserDeletedPage()
+    {
+        $this->title = "Suppression de l'utilisateur effectuée";
+        $this->content = "<p>L'utilisateur a bien été supprimé.</p>";
+    }
     public function makeExistComptePage()
     {
         $this->title = "Inscription";
@@ -204,17 +228,23 @@ class View
     public function makeAProposPage()
     {
         $this->title = "À propos de nous";
-        $this->content = "<p>Nous sommes dans le groupe 25. Notre groupe est composé de : Manon JAMES (22000089) et de Chamora SAMAKON (21903735).</p>";
+        $this->content = "<p>Nous sommes le groupe 25. Notre groupe est composé de : Manon JAMES (22000089) et de Chamora SAMAKON (21903735).</p>";
+
+        $this->content .= "<h3>Notre site :</h3>";
+        $this->content .= "<p>Lors de ce projet, nous devions faire un site qui utilise l'architecture MVCR que nous avons vu en cours et en TP.
+        Nous avons décidé de faire un site de recettes de cuisine.
+        Nous avons donc décidé de reprendre le TP concernant les animaux, réalisé précédemment, en l'adaptant de façon à ce qu'il corresponde aux besoins de notre projet. <br />
+        BLABLABLA</p>";
 
         $this->content .= "<h3>Les points réalisés :</h3>";
-        $this->content .= "<p>Lors de ce projet, nous devions faire un site qui utilise l'architecture MVCR que nous avons vue en cours et en TP. 
-        Nous avons donc décidé de reprendre le tp concernant les animals que nous avons fait, en l'adaptant de façon à ce qu'il corresponde à ce dont nous aurons besoin pour réaliser notre projet. <br />
+        $this->content .= "<p>Lors de ce projet, nous devions faire un site qui utilise l'architecture MVCR que nous avons vu en cours et en TP.
+        Nous avons donc décidé de reprendre le TP concernant les animals réalisé précédemment, en l'adaptant de façon à ce qu'il corresponde aux besoins de notre projet. <br />
         BLABLABLA</p>";
         $this->content .= "<p>En ce qui concerne les compléments nous devions en choisir 3 parmis la liste ci-dessous :</p>
         <ol>
             <li>(*) Une recherche d'objets.</li>
             <li>Associer des images aux objets (en choisir un seul parmi les trois) :
-                <ol> 
+                <ol>
                     <li>(*) Un objet peut être illustré par une image (et une seule, non modifiable) uploadée par le créateur de l'objet.</li>
                     <li>(***) Un objet peut être illustré par zéro, une ou plusieurs images (modifiables) uploadées par le créateur de l'objet.</li>
                     <li>(****) Un objet peut être illustré par une (ou plusieurs) images (modifiables), uploadées par le créateur de l'objet et l'upload de cette image aura une barre de progression.</li>
@@ -228,15 +258,33 @@ class View
             <li>(**) Dans le formulaire d'inscription, vérification en temps réel de la disponibilité du login (par exemple lorsque le focus quitte le champ login).</li>
             <li>(***) Fonctionnalité rester connecté, avec une durée de validité (plusieurs jours par exemple) paramétrable par l'administrateur du site.</li>
         </ol>
-        <p>Nous avons donc choisit : </p>
-        <p>Une recherche d'objets. (1) et  Associer des images aux objets(2.2).</p>";
+        <p>Nous avons donc choisi : </p>
+        <p>Une recherche d'objets. (1), Gestion par un admin (6) et  Associer des images aux objets(2.2).</p>";
 
         $this->content .= "<h3>La répartition des tâches :</h3>";
-        $this->content .= "<p>Les tps de concernant la création d'un site web sur les animaaux nous ont beaucoup servit. 
-        Comme Chamora avait terminé tous le tp sur le site des animaux, elle a reprit son code et l'a adapté de façon à ce que ça conrrespond à ce dont nous aurions besoin pour réalisé notre site. 
-        De ce fait, il nous restait plus que l'authentification des utilisateurs et les compléments à réalisé.</p>";
+        $this->content .= "<p>Les TPs concernant la création d'un site web sur les animaux nous ont beaucoup servi.
+        Etant donné que Chamora avait terminé tout le TP concernant le site des animaux, nous avons repris sa version et l'avons adapté de façon à ce qu'elle corresponde au site que nous voulions faire.
+        De ce fait, il ne nous restait plus que l'authentification des utilisateurs et les compléments à réalisé. Nous avons eu quelques difficultés au niveau du complément concernant l'ajout d'images. Au départ </p>";
 
         $this->content .= "<h3>Quelques explications concernant nos choix en matière de design, modélisation, code, etc... :</h3>";
         $this->content .= "<p>sblablabla</p>";
+    }
+    public function makeAdminPage($users){
+      $this->title = "Espace administrateur";
+      $this->content .= "<h3>Utilisateurs enregistrés</h3>";
+      $this->content .= "<div class='listeUtilisateurs'><ul>";
+      foreach ($users as $key => $value) {
+          $this->content .= "<li>" . $value['utilisateur'] . "</li>";
+      }
+      $this->content .= "</ul></div>";
+      $this->content .= '<a href="' . $this->router->getUserAskDeletionURL($id) . '"> Supprimer un utilisateur</a><br />';
+    }
+
+
+
+    public function makeUnknownUserPage()
+    {
+        $this->title = "Erreur";
+        $this->content = "<p> L'utilisateur saisi n'existe pas. </p>";
     }
 }

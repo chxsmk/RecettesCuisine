@@ -17,13 +17,29 @@ class Controller
     {
         if (key_exists('username', $_SESSION)) {
             $recette = $this->recettesdb->read($id);
+            $user=$_SESSION['username'];
             if ($recette != null) {
-                $this->view->makeRecettePage($recette, $id);
+                $this->view->makeRecettePage($recette, $id, $this->recettesdb->isAdmin($user));
             } else {
                 $this->view->makeUnknownRecettePage();
             }
         } else {
             $this->view->makeNoUserPage();
+        }
+    }
+
+    public function showInformationAdmin()
+    {   if (key_exists('username', $_SESSION)) {
+            $user=$_SESSION['username'];
+            if (($this->recettesdb->isAdmin($user))==true) {
+                $users = $this->recettesdb->readAllUsers();
+                $this->view->makeAdminPage($users);
+            } else {
+                $this->view->makeNoAdminPage();
+            }
+        }
+        else{
+          $this->view->makeNoUserPage();
         }
     }
 
@@ -120,7 +136,7 @@ class Controller
     {
         $connecte = $this->recettesdb->verification($data);
         if ($connecte != null) {
-            //compte existe 
+            //compte existe
             $this->view->makeExistComptePage();
         } else {
             //Ajout à la bd
@@ -142,4 +158,19 @@ class Controller
             $this->view->makeConnexionPage();
         }
     }
+
+    public function askUserDeletion(){
+        $this->view->makeUserDeletionPage();
+    }
+
+    public function deleteUser($user){
+        if ($this->recettesdb->userExist($user)) {
+            $this->recettesdb->deleteUsername($user);
+            $this->view->makeUserDeletedPage();
+        } else {
+            $this->view->makeUnknownUserPage();
+        }
+    }
+
+
 }

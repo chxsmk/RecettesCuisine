@@ -40,6 +40,15 @@ class Router
             if ($_GET['action'] == 'connexion') {
                 $controller->connexion($_POST);
             }
+            if ($_GET['action'] == 'espaceAdmin') {
+                $controller->showInformationAdmin();
+            }
+            if ($_GET['action'] == 'supprimerUtilisateur') {
+                $controller->askUserDeletion();
+            }
+            if ($_GET['action'] == 'confirmerSuppressionUtilisateur') {
+                $controller->deleteUser($_POST['utilisateur']);
+            }
             if ($_GET['action'] == 'deconnexion') {
                 session_destroy();
                 $controller->homeRecettesPage();
@@ -142,6 +151,20 @@ class Router
         return "recettes.php?action=connexion";
     }
 
+    public function getAdminURL()
+    {
+        return "recettes.php?action=espaceAdmin";
+    }
+
+    public function getUserAskDeletionURL()
+    {
+        return "recettes.php?action=supprimerUtilisateur";
+    }
+
+    public function getUserDeletionURL()
+    {
+        return "recettes.php?action=confirmerSuppressionUtilisateur";
+    }
     //Revoir la partie déconnexion
     public function getDeconnexionURL()
     {

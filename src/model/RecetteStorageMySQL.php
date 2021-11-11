@@ -25,6 +25,47 @@ class RecetteStorageMySQL implements RecetteStorage
         }
     }
 
+    public function readAllUsers()
+    {
+        $requete = $this->db->query('SELECT utilisateur FROM users WHERE admin IS NULL');
+        $resultat = $requete->fetchAll();
+        return $resultat;
+    }
+
+    public function readUser($user)
+    {
+        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
+        $requete->execute([":user" => $user]);
+        $resultat = $requete->fetch();
+        if ($resultat !== false) {
+            $utilisateur = $resultat['utilisateur'];
+            return $utilisateur;
+        } else {
+            return null;
+        }
+    }
+
+    public function isAdmin($user){
+      $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user AND admin=1');
+      $requete->execute([":user" => $user]);
+      $resultat = $requete->fetch();
+      if ($resultat !== false) {
+          return true;
+      }else {
+          return false;
+      }
+    }
+
+    public function userExist($user){
+      $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
+      $requete->execute([":user" => $user]);
+      $resultat = $requete->fetch();
+      if ($resultat !== false) {
+          return true;
+      }else {
+          return false;
+      }
+    }
     public function readAll()
     {
         $requete = $this->db->query('SELECT * FROM recettes');
@@ -51,6 +92,10 @@ class RecetteStorageMySQL implements RecetteStorage
     {
         $requete = $this->db->prepare('DELETE FROM recettes WHERE id= :id');
         return $requete->execute([":id" => $id]);
+    }
+    public function deleteUsername($user)    {
+        $requete = $this->db->prepare('DELETE FROM users WHERE utilisateur= :user');
+        return $requete->execute([":user" => $user]);
     }
 
     public function update(Recette $recette, $id)
