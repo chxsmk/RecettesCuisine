@@ -159,7 +159,7 @@ class Controller
             $recettes = $this->recettesdb->readAll();
             $this->view->makeHomePage($recettes);
         } else {
-            $this->view->makeConnexionPage();
+            $this->view->makeIdentifiantInconnuPage();
         }
     }
 
