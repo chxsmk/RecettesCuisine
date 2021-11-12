@@ -40,6 +40,15 @@ class Router
             if ($_GET['action'] == 'connexion') {
                 $controller->connexion($_POST);
             }
+            if ($_GET['action'] == 'espaceAdmin') {
+                $controller->showInformationAdmin();
+            }
+            if ($_GET['action'] == 'supprimerUtilisateur') {
+                $view->makeUserDeletionPage();
+            }
+            if ($_GET['action'] == 'confirmerSuppressionUtilisateur') {
+                $controller->deleteUser($_POST['utilisateur']);
+            }
             if ($_GET['action'] == 'deconnexion') {
                 session_destroy();
                 $controller->homeRecettesPage();
@@ -66,14 +75,14 @@ class Router
                     $controller->saveRecetteModifications($_POST, $id);
                 }
             }
+            if ($_GET['action'] == 'apropos') {
+                $view->makeAProposPage();
+            }
         }
+
         if (key_exists('recherche', $_GET)) {
             $recherche = htmlspecialchars($_GET['recherche']);
             $controller->searchRecettesPage($recherche);
-        }
-
-        if (key_exists('apropos', $_GET)) {
-            $view->makeAProposPage();
         }
 
         if (empty($_GET)) {
@@ -90,6 +99,46 @@ class Router
     public function getRecetteURL($id)
     {
         return $url = "recettes.php?id=" . $id;
+    }
+
+    public function getIncriptionFormURL()
+    {
+        return "recettes.php?action=inscription";
+    }
+
+    public function getInscritionURL()
+    {
+        return "recettes.php?action=inscrit";
+    }
+
+    public function getConnexionFormURL()
+    {
+        return "recettes.php?action=seConnecter";
+    }
+
+    public function getConnexionURL()
+    {
+        return "recettes.php?action=connexion";
+    }
+
+    public function getAdminURL()
+    {
+        return "recettes.php?action=espaceAdmin";
+    }
+
+    public function getUserAskDeletionURL()
+    {
+        return "recettes.php?action=supprimerUtilisateur";
+    }
+
+    public function getUserDeletionURL()
+    {
+        return "recettes.php?action=confirmerSuppressionUtilisateur";
+    }
+    //Revoir la partie déconnexion
+    public function getDeconnexionURL()
+    {
+        return "recettes.php?action=deconnexion";
     }
 
     public function getRecetteCreationURL()
@@ -122,34 +171,8 @@ class Router
         return "recettes.php?id=" . $id . "&amp;action=sauverModification";
     }
 
-    public function getIncriptionFormURL()
-    {
-        return "recettes.php?action=inscription";
-    }
-
-    public function getInscritionURL()
-    {
-        return "recettes.php?action=inscrit";
-    }
-
-    public function getConnexionFormURL()
-    {
-        return "recettes.php?action=seConnecter";
-    }
-
-    public function getConnexionURL()
-    {
-        return "recettes.php?action=connexion";
-    }
-
-    //Revoir la partie déconnexion
-    public function getDeconnexionURL()
-    {
-        return "recettes.php?action=deconnexion";
-    }
-
     public function getAProposURL()
     {
-        return "recettes.php?apropos";
+        return "recettes.php?action=apropos";
     }
 }

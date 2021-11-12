@@ -25,6 +25,50 @@ class RecetteStorageMySQL implements RecetteStorage
         }
     }
 
+    public function readAllUsers()
+    {
+        $requete = $this->db->query('SELECT utilisateur FROM users');
+        $resultat = $requete->fetchAll();
+        return $resultat;
+    }
+
+    /*public function readUser($user)
+    {
+        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
+        $requete->execute([":user" => $user]);
+        $resultat = $requete->fetch();
+        if ($resultat !== false) {
+            $utilisateur = $resultat['utilisateur'];
+            return $utilisateur;
+        } else {
+            return null;
+        }
+    }*/
+
+    public function isAdmin($user)
+    {
+        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
+        $requete->execute([":user" => $user]);
+        $resultat = $requete->fetch();
+        if ($resultat !== false) {
+            if (password_verify('toto', $resultat['mdp'])) {
+                return $resultat;
+            }
+        }
+    }
+
+    public function userExist($user)
+    {
+        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
+        $requete->execute([":user" => $user]);
+        $resultat = $requete->fetch();
+        if ($resultat !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function readAll()
     {
         $requete = $this->db->query('SELECT * FROM recettes');
@@ -53,16 +97,17 @@ class RecetteStorageMySQL implements RecetteStorage
         return $requete->execute([":id" => $id]);
     }
 
+    public function deleteUsername($user)
+    {
+        $requete = $this->db->prepare('DELETE FROM users WHERE utilisateur= :user');
+        return $requete->execute([":user" => $user]);
+    }
+
     public function update(Recette $recette, $id)
     {
         $requete = $this->db->prepare('UPDATE recettes SET utilisateur= :utilisateur, titre= :titre, recette= :recette, image= :image WHERE id= :id');
         return $requete->execute(array(":utilisateur" => $recette->getUtilisateur(), ":titre" => $recette->getTitre(), ":recette" => $recette->getRecette(), ":image" => $recette->getImage(), "id" => $id));
     }
-
-    /*Gestion de mot passe :
-    encryter : $hash = passeword_hash('mdp',PASSEWORD);
-    vérif/décrypter : password_verify($_POST['password'],$hash);
-    */
 
     public function addNewIncription($data)
     {

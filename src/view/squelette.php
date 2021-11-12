@@ -22,16 +22,24 @@
 				<?php
 				echo '<li><a href="' . $this->router->homePage() . '">Accueil</a></li>';
 				echo '<li><a href="' . $this->router->getRecetteCreationURL() . '">Ajouter une recette</a></li>';
-				echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
+				echo '<li class="menu"><a href="#">Compte</a>';
+				echo '<ul class="sousMenu">';
 				if (key_exists('username', $_SESSION)) {
 					if (key_exists('logout', $_POST)) {
 						echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
+						echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
 					} else {
+						//a revoir, un utilisateur ayant pour usernam admin peut y avoir accès
+						if ($_SESSION['username'] == 'admin') {
+							echo '<li><a href="' . $this->router->getAdminURL() . '">Espace administrateur</a></li>';
+						}
 						echo '<li><a href="' . $this->router->getDeconnexionURL() . '">Deconnexion</a></li>';
 					}
 				} else {
 					echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
+					echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
 				}
+				echo '</li></ul>';
 				?>
 			</ul>
 		</nav>

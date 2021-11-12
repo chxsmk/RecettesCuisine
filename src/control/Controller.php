@@ -17,10 +17,26 @@ class Controller
     {
         if (key_exists('username', $_SESSION)) {
             $recette = $this->recettesdb->read($id);
+            $user = $_SESSION['username'];
             if ($recette != null) {
                 $this->view->makeRecettePage($recette, $id);
             } else {
                 $this->view->makeUnknownRecettePage();
+            }
+        } else {
+            $this->view->makeNoUserPage();
+        }
+    }
+
+    public function showInformationAdmin()
+    {
+        if (key_exists('username', $_SESSION)) {
+            $user = $_SESSION['username'];
+            if (($this->recettesdb->isAdmin($user))) {
+                $users = $this->recettesdb->readAllUsers();
+                $this->view->makeAdminPage($users);
+            } else {
+                $this->view->makeNoAdminPage();
             }
         } else {
             $this->view->makeNoUserPage();
@@ -119,15 +135,19 @@ class Controller
     public function inscription(array $data)
     {
         $connecte = $this->recettesdb->verification($data);
-        if ($connecte != null) {
-            //compte existe 
-            $this->view->makeExistComptePage();
+        if ($data['username'] == 'admin') {
+            $this->view->makeAutreNomPage();
         } else {
-            //Ajout à la bd
-            $this->recettesdb->addNewIncription($data);
-            $_SESSION['username'] = $data['username'];
-            $recettes = $this->recettesdb->readAll();
-            $this->view->makeHomePage($recettes);
+            if ($connecte != null) {
+                //compte existe
+                $this->view->makeExistComptePage();
+            } else {
+                //Ajout à la bd
+                $this->recettesdb->addNewIncription($data);
+                $_SESSION['username'] = $data['username'];
+                $recettes = $this->recettesdb->readAll();
+                $this->view->makeHomePage($recettes);
+            }
         }
     }
 
@@ -140,6 +160,16 @@ class Controller
             $this->view->makeHomePage($recettes);
         } else {
             $this->view->makeConnexionPage();
+        }
+    }
+
+    public function deleteUser($user)
+    {
+        if ($this->recettesdb->userExist($user)) {
+            $this->recettesdb->deleteUsername($user);
+            $this->view->makeUserDeletedPage();
+        } else {
+            $this->view->makeUnknownUserPage();
         }
     }
 }

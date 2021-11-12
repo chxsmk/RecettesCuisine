@@ -15,7 +15,7 @@ a{
 
 nav > ul{
     display: grid;
-	grid-template-columns: 4fr 4fr 4fr 1fr;
+	grid-template-columns: 4fr 4fr 1fr;
 	font-family: Impact;
 	top: 0;
 	left: 0;
@@ -28,7 +28,6 @@ nav > ul{
 	padding-left: 20px;
     list-style-type: none;
     background-color: white;
-    font-size: 18px;
 }
 
 nav ul li{
