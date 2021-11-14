@@ -41,7 +41,8 @@ INSERT INTO `users` (`id`, `utilisateur`, `mdp`) VALUES
 (12, 'admin', '$2y$10$H1NjL.Rr9etbytO4GAZmB.9RCWoF5k//lRBRsSn6aoBtG52j4gThy'),
 (14, 'lecarpentier', '$2y$10$JQo9OuT1BoePvlzf4rwrsuFUIYvre5tWA8w/u659jiTxT72jIjv2u'),
 (23, 'manon', '$2y$10$l9IHOsjNVe/fBuQIt.A/PueTxPLrcbX1Aa7ZvqmDhfhIRpvk5XXli'),
-(24, 'vanier', '$2y$10$xR9B.zoNBSffz/2aba4Rx.dl9QRuXOyWIfPa9xHmfYD.7X/Tkzf/K');
+(24, 'vanier', '$2y$10$xR9B.zoNBSffz/2aba4Rx.dl9QRuXOyWIfPa9xHmfYD.7X/Tkzf/K'),
+(25, 'chamora', '$2y$10$pbzKNBOQR76qF8RuP74HB.zqLLA5sL9LfaRplrR/SCejQuWORoZPe');
 
 --
 -- Index pour les tables déchargées
