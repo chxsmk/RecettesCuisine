@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once("RecetteStorage.php");
 
 class RecetteStorageMySQL implements RecetteStorage
@@ -46,7 +45,7 @@ class RecetteStorageMySQL implements RecetteStorage
         return $resultat;
     }
 
-    public function delete($id)
+    public function deleteRecette($id)
     {
         $requete = $this->db->prepare('DELETE FROM recettes WHERE id= :id');
         return $requete->execute([":id" => $id]);
@@ -68,7 +67,6 @@ class RecetteStorageMySQL implements RecetteStorage
     {
         $mdp = password_hash($data['password'], PASSWORD_DEFAULT);
         $requete = $this->db->prepare('INSERT INTO users (utilisateur, mdp) VALUES (:utilisateur, :mdp)');
-
         $requete->execute(array(":utilisateur" => $data['username'], ":mdp" => $mdp));
         return $this->db->lastInsertId();
     }
@@ -98,11 +96,6 @@ class RecetteStorageMySQL implements RecetteStorage
         $requete->execute([":user" => $user]);
         $resultat = $requete->fetch();
         return $resultat;
-        /*if ($resultat !== false) {
-            if (password_verify('toto', $resultat['mdp'])) {
-                return $resultat;
-            }
-        }*/
     }
 
     public function userExist($user)
@@ -110,10 +103,6 @@ class RecetteStorageMySQL implements RecetteStorage
         $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
         $requete->execute([":user" => $user]);
         $resultat = $requete->fetch();
-        if ($resultat !== false) {
-            return true;
-        } else {
-            return false;
-        }
+        return $resultat;
     }
 }

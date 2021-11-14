@@ -23,7 +23,7 @@ class RecetteBuilder
     public function createRecette()
     {
         $nomImg = uniqid() . $_FILES['image']['name'];
-        if (move_uploaded_file($_FILES['image']['tmp_name'], "imagesUsers/" . $nomImg)) {
+        if (move_uploaded_file($_FILES['image']['tmp_name'], "upload/" . $nomImg)) {
             $this->data["image"] = $nomImg;
         }
 

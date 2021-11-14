@@ -92,11 +92,17 @@ class Controller
 
     public function deleteRecette($id)
     {
-        $ok = $this->recettesdb->delete($id);
-        if (!$ok) {
-            $this->view->makeUnknownRecettePage();
-        } else {
-            $this->view->makeRecetteDeletedPage();
+        $recette = $this->recettesdb->read($id);
+        if ($recette) {
+            $nomImage = $recette->getImage();
+            $supp = $this->recettesdb->deleteRecette($id);
+            if (!$supp || !$nomImage) {
+                $this->view->makeUnknownRecettePage();
+            } else {
+                unlink('upload/' . $nomImage);
+                $recettes = $this->recettesdb->readAll();
+                $this->view->makeHomePage($recettes);
+            }
         }
     }
 

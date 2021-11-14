@@ -16,25 +16,32 @@
 		<nav>
 			<ul class="nav">
 				<?php
-				echo '<li><a href="' . $this->router->homePage() . '">Accueil</a></li>';
-				echo '<li><a href="' . $this->router->getRecetteCreationURL() . '">Ajouter une recette</a></li>';
+				foreach ($this->getMenu() as $texte => $lien) {
+					echo '<li><a href=' . $lien . '>' . $texte . '</a></li>';
+				}
 				echo '<li class="menu"><a href="#">Compte</a>';
 				echo '<ul class="sousMenu">';
-				if (key_exists('username', $_SESSION)) {
-					if (key_exists('logout', $_POST)) {
-						echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
-						echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
-					} else {
+				foreach ($this->getSousMenu() as $texte => $lien) {
+					echo '<li><a href=' . $lien . '>' . $texte . '</a></li>';
+				}
+				echo '</ul>';
+				echo '</li>';
+				/*if (key_exists('username', $_SESSION)) {
+					if (!key_exists('logout', $_POST)) {
 						if ($_SESSION['username'] == 'admin') {
 							echo '<li><a href="' . $this->router->getAdminURL() . '">Espace administrateur</a></li>';
 						}
-						echo '<li><a href="' . $this->router->getDeconnexionURL() . '">Deconnexion</a></li>';
+						$compte = "Deconnexion";
+						$lien = $this->router->getDeconnexionURL();
 					}
 				} else {
-					echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
-					echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
+					$compte = "Connexion";
+					$lien = $this->router->getConnexionFormURL();
+					echo '<li><a href="' . $this->router->getIncriptionFormURL() . '"> Inscription </a></li>';
 				}
-				echo '</ul></li>';
+				echo '<li><a href="' . $lien . '">' . $compte . '</a></li>';
+
+				echo '</ul></li>';*/
 				?>
 			</ul>
 		</nav>

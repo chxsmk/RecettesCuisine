@@ -24,6 +24,37 @@ class View
         include "squelette.php";
     }
 
+    protected function getMenu()
+    {
+        return array(
+            "Accueil" => $this->router->homePage(),
+            "Créer une recette" => $this->router->getRecetteCreationURL(),
+        );
+    }
+
+    protected function getSousMenu()
+    {
+        if (key_exists('username', $_SESSION)) {
+            if (!key_exists('logout', $_POST)) {
+                if ($_SESSION['username'] == 'admin') {
+                    return array(
+                        "Espace administrateur" => $this->router->getAdminURL(),
+                        "Deconnexion" => $this->router->getDeconnexionURL()
+                    );
+                } else {
+                    return array(
+                        "Deconnexion" => $this->router->getDeconnexionURL()
+                    );
+                }
+            }
+        } else {
+            return array(
+                "Inscription" => $this->router->getIncriptionFormURL(),
+                "Connexion" => $this->router->getConnexionFormURL()
+            );
+        }
+    }
+
     public function makeHomePage($tableau)
     {
         if (key_exists('username', $_SESSION)) {
@@ -36,7 +67,7 @@ class View
         foreach ($tableau as $key => $value) {
             $this->content .= "<figure class='recette'>";
             $id = $this->router->getRecetteURL($value['id']);
-            $this->content .= '<img src="imagesUsers/' . $value['image'] . '" name="image" alte="image de la recette">';
+            $this->content .= '<img src="upload/' . $value['image'] . '" name="image" alte="image de la recette">';
             $this->content .= "<figcaption><a href='" . $id . "'>" . $value['titre'] . "</a></figcaption>";
             $this->content .= "</figure>";
         }
@@ -48,7 +79,7 @@ class View
         $this->title = 'Une recette écrite par : ' . $recette->getUtilisateur();
         $this->content = '<h3> Recette pour : ' . $recette->getTitre() . '</h3>';
         $this->content .= '<p> Voici la recette : <br />' . $recette->getRecette() . '</p>';
-        $this->content .= '<img src="imagesUsers/' . $recette->getImage() . '" name="image"><br />';
+        $this->content .= '<img src="upload/' . $recette->getImage() . '" name="image"><br />';
         if ($_SESSION['username'] == $recette->getUtilisateur() || $_SESSION['username'] == 'admin') {
             $this->content .= '<a href="' . $this->router->getRecetteAskDeletionURL($id) . '"> Supprimer la recette </a><br />';
             $this->content .= '<a href="' . $this->router->getRecetteModificationURL($id) . '"> Modifier la recette </a><br />';
@@ -183,7 +214,6 @@ class View
         $utilisateurRecette = $builder->getUtilisateurRef();
         $titreRecette = $builder->getTitreRef();
         $recette = $builder->getRecetteRef();
-        $imageRecette = $builder->getImageRef();
 
         $content = '<p><label>Votre nom utilisateur :  <br /><input type="text" name="' . $utilisateurRecette . '" placeholder="Entrez votre ' . $utilisateurRecette . '" value="' . $builder->getData($utilisateurRecette) . '">';
         $errUtulisateur = $builder->getErrors($utilisateurRecette);
@@ -206,21 +236,20 @@ class View
         }
         $content .= '</label></p>';
 
-        $content .= '<p><label>Choisissez le fichier image (JPEG ou PNG) : <input type="file" name="' . $imageRecette . '" accept="image/png, image/jpeg">' .
-            $errImage = $builder->getErrors($imageRecette);
-        if ($errImage !== null) {
-            echo "to";
-            $content .= ' <span class="error">' . $errImage . '</span>';
-        }
-        $content .= '</label></p>';
         return $content;
     }
 
     public function makeRecetteCreationPage(RecetteBuilder $builder)
     {
+        $imageRecette = $builder->getImageRef();
+
         $this->title = "Ajouter votre recette";
         $this->content .= '<form enctype="multipart/form-data" action="' . $this->router->getRecetteSaveURL() . '" method="POST">';
         $this->content .= self::makeRecetteForm($builder);
+        $this->content .= "<p>Attention, l'image ne pourra pas être modifiée ! </p>";
+        $this->content .= '<p><label>Choisissez le fichier image (JPEG ou PNG) : <input type="file" name="' . $imageRecette . '" accept="image/png, image/jpeg" required>';
+        $this->content .= '</label></p>';
+
         $this->content .= '<button>Créer</button></form>';
     }
 
@@ -238,12 +267,6 @@ class View
         $this->content = "<p>La recette va être supprimée.</p>";
         $this->content .= '<form action="' . $this->router->getRecetteDeletionURL($id) . '" method="POST">';
         $this->content .= "<button>Confirmer</button></form>";
-    }
-
-    public function makeRecetteDeletedPage()
-    {
-        $this->title = "Suppression effectuée";
-        $this->content = "<p>La recette a bien été correctement supprimée.</p>";
     }
 
     public function makeAProposPage()
@@ -278,19 +301,20 @@ class View
             <li>(***) Fonctionnalité rester connecté, avec une durée de validité (plusieurs jours par exemple) paramétrable par l'administrateur du site.</li>
         </ol>
         <p>Nous avons donc choisi : </p>
-        <p>Une recherche d'objets. (1), Gestion par un admin (6) et  Associer des images aux objets(2.2).</p>";
+        <p>Une recherche d'objets. (1), Gestion par un admin (6) et  Associer des images aux objets(2.1).</p>";
 
         $this->content .= "<h3>La répartition des tâches :</h3>";
         $this->content .= "<p>Les TPs concernant la création d'un site web sur les animaux nous ont beaucoup servi.
         Etant donné que Chamora avait terminé tout le TP concernant le site des animaux, nous avons repris sa version et l'avons adapté de façon à ce qu'elle corresponde au site que nous voulions faire.<br />
-        De ce fait, il ne nous restait plus que l'authentification des utilisateurs et les compléments à réaliser. <br />Chamora s'est occupée de la barre de recherche. <br />Manon s'est occupée de la partie administrateur.
+        De ce fait, il ne nous restait plus que l'authentification des utilisateurs et les compléments à réaliser. <br />Chamora s'est occupée de la barre de recherche et de l'authentification des utilisateurs. <br />Manon s'est occupée de la partie administrateur.
         <br />Concernant l'upload d'images, cela s'est fait à 2 : nous voulions à la base les stocker au format blob dans notre base de données, ce que Manon a essayé à maintes reprises en vain. Chamora a donc eu l'idée
-        de stocker les images dans un dossier upload, plutôt que de les stocker dans la bd, et de stocker leur adresse et nom dans la BDD à la place, ce qui a fonctionnée. Pour le CSS, nous avons chacune apporté notre touche à tour de rôle.</p>";
+        de stocker les images dans un dossier upload, plutôt que de les stocker dans la bd, et de stocker l'adresse et le nom de l'image en question dans la BD à la place, ce qui a fonctionnée. Pour le CSS, nous avons chacune apporté notre touche à tour de rôle.</p>";
 
         $this->content .= "<h3>Quelques explications concernant nos choix en matière de design, modélisation, code, etc... :</h3>";
         $this->content .= "<p>Notre site étant un site culinaire, partageant des recettes de cuisine, les internautes ont la possibilité de se créer un compte
         afin de publier leurs propres recettes. <br />L'utilisateur ayant publié la recette peut la modifier au gré de ses envies ainsi que la supprimer s'il le souhaite. Il ne peut agir que sur
-        les siennes, mais n'a pas de pouvoir sur les recettes des autres utilisateurs. <br />Certains utilisateurs peuvent avoir plus de pouvoir s'ils font parti des administrateurs. Les administrateurs ont un espace dédié, l'Espace Administrateur. Ils ont le pouvoir de modifier
-        ou supprimer n'importe quelle recette depuis la page de celle-ci. Il ont aussi accès à la gestion des comptes utilisateurs, et peuvent les supprimer depuis leur Espace Administrateur.</p>";
+        les siennes, mais n'a pas de pouvoir sur les recettes des autres utilisateurs. <br />
+        Par la suite, nous avons un administrateur qui a un espace dédié à lui, l'Espace Administrateur. il a le pouvoir de modifier ou de supprimer n'importe quelle recette depuis la page de celle-ci. 
+        Il a aussi accès à la gestion des comptes utilisateurs, et peut les supprimer depuis son Espace Administrateur.</p>";
     }
 }

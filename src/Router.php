@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once("view/View.php");
 require_once("control/Controller.php");
 require_once("model/RecetteStorage.php");
@@ -51,6 +51,7 @@ class Router
             }
             if ($_GET['action'] == 'deconnexion') {
                 session_destroy();
+                session_start();
                 $controller->homeRecettesPage();
             }
             if ($_GET['action'] == 'nouveau') {
@@ -93,86 +94,86 @@ class Router
 
     public function homePage()
     {
-        return "recettes.php?action=accueil";
+        return "index.php?action=accueil";
     }
 
     public function getRecetteURL($id)
     {
-        return $url = "recettes.php?id=" . $id;
+        return $url = "index.php?id=" . $id;
     }
 
     public function getIncriptionFormURL()
     {
-        return "recettes.php?action=inscription";
+        return "index.php?action=inscription";
     }
 
     public function getInscritionURL()
     {
-        return "recettes.php?action=inscrit";
+        return "index.php?action=inscrit";
     }
 
     public function getConnexionFormURL()
     {
-        return "recettes.php?action=seConnecter";
+        return "index.php?action=seConnecter";
     }
 
     public function getConnexionURL()
     {
-        return "recettes.php?action=connexion";
+        return "index.php?action=connexion";
     }
 
     public function getAdminURL()
     {
-        return "recettes.php?action=espaceAdmin";
+        return "index.php?action=espaceAdmin";
     }
 
     public function getUserAskDeletionURL()
     {
-        return "recettes.php?action=supprimerUtilisateur";
+        return "index.php?action=supprimerUtilisateur";
     }
 
     public function getUserDeletionURL()
     {
-        return "recettes.php?action=confirmerSuppressionUtilisateur";
+        return "index.php?action=confirmerSuppressionUtilisateur";
     }
     //Revoir la partie déconnexion
     public function getDeconnexionURL()
     {
-        return "recettes.php?action=deconnexion";
+        return "index.php?action=deconnexion";
     }
 
     public function getRecetteCreationURL()
     {
-        return "recettes.php?action=nouveau";
+        return "index.php?action=nouveau";
     }
 
     public function getRecetteSaveURL()
     {
-        return "recettes.php?action=sauverNouveau";
+        return "index.php?action=sauverNouveau";
     }
 
     public function getRecetteAskDeletionURL($id)
     {
-        return "recettes.php?id=" . $id . "&amp;action=supprimer";
+        return "index.php?id=" . $id . "&amp;action=supprimer";
     }
 
     public function getRecetteDeletionURL($id)
     {
-        return "recettes.php?id=" . $id . "&amp;action=confirmerSuppression";
+        return "index.php?id=" . $id . "&amp;action=confirmerSuppression";
     }
 
     public function getRecetteModificationURL($id)
     {
-        return "recettes.php?id=" . $id . "&amp;action=modifier";
+        return "index.php?id=" . $id . "&amp;action=modifier";
     }
 
     public function updateModificationRecette($id)
     {
-        return "recettes.php?id=" . $id . "&amp;action=sauverModification";
+        return "index.php?id=" . $id . "&amp;action=sauverModification";
     }
 
     public function getAProposURL()
     {
-        return "recettes.php?action=apropos";
+        return "index.php?action=apropos";
     }
 }
