@@ -39,7 +39,7 @@
 					echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
 					echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
 				}
-				echo '</li></ul>';
+				echo '</ul>';
 				?>
 			</ul>
 		</nav>
