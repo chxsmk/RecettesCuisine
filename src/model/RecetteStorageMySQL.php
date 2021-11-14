@@ -1,5 +1,4 @@
 <?php
-
 session_start();
 require_once("RecetteStorage.php");
 
@@ -22,50 +21,6 @@ class RecetteStorageMySQL implements RecetteStorage
             return $recette;
         } else {
             return null;
-        }
-    }
-
-    public function readAllUsers()
-    {
-        $requete = $this->db->query('SELECT utilisateur FROM users');
-        $resultat = $requete->fetchAll();
-        return $resultat;
-    }
-
-    /*public function readUser($user)
-    {
-        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
-        $requete->execute([":user" => $user]);
-        $resultat = $requete->fetch();
-        if ($resultat !== false) {
-            $utilisateur = $resultat['utilisateur'];
-            return $utilisateur;
-        } else {
-            return null;
-        }
-    }*/
-
-    public function isAdmin($user)
-    {
-        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
-        $requete->execute([":user" => $user]);
-        $resultat = $requete->fetch();
-        if ($resultat !== false) {
-            if (password_verify('toto', $resultat['mdp'])) {
-                return $resultat;
-            }
-        }
-    }
-
-    public function userExist($user)
-    {
-        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
-        $requete->execute([":user" => $user]);
-        $resultat = $requete->fetch();
-        if ($resultat !== false) {
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -127,6 +82,38 @@ class RecetteStorageMySQL implements RecetteStorage
             if (password_verify($data['password'], $resultat['mdp'])) {
                 return $resultat;
             }
+        }
+    }
+
+    public function readAllUsers()
+    {
+        $requete = $this->db->query('SELECT utilisateur FROM users');
+        $resultat = $requete->fetchAll();
+        return $resultat;
+    }
+
+    public function isAdmin($user)
+    {
+        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
+        $requete->execute([":user" => $user]);
+        $resultat = $requete->fetch();
+        return $resultat;
+        /*if ($resultat !== false) {
+            if (password_verify('toto', $resultat['mdp'])) {
+                return $resultat;
+            }
+        }*/
+    }
+
+    public function userExist($user)
+    {
+        $requete = $this->db->prepare('SELECT * FROM users WHERE utilisateur= :user');
+        $requete->execute([":user" => $user]);
+        $resultat = $requete->fetch();
+        if ($resultat !== false) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

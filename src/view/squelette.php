@@ -1,7 +1,3 @@
-<?php
-//session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -29,7 +25,6 @@
 						echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
 						echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
 					} else {
-						//a revoir, un utilisateur ayant pour usernam admin peut y avoir accès
 						if ($_SESSION['username'] == 'admin') {
 							echo '<li><a href="' . $this->router->getAdminURL() . '">Espace administrateur</a></li>';
 						}
@@ -39,14 +34,13 @@
 					echo '<li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>';
 					echo '<li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>';
 				}
-				echo '</li></ul>';
+				echo '</ul></li>';
 				?>
 			</ul>
 		</nav>
 		<h1>Kitchy Cootchen</h1>
 		<form id="recherche" method="GET">
 			<input type="text" name="recherche" size="30" placeholder="Rechercher une recette" required="required">
-			<!--<input type="submit" id= "button-submit" name="submit" value="Rechercher">-->
 		</form>
 	</header>
 	<main>

@@ -55,18 +55,6 @@ class View
         }
     }
 
-    public function makeUnknownRecettePage()
-    {
-        $this->title = "Erreur";
-        $this->content = "<p> La page demandée n'existe pas. </p>";
-    }
-
-    public function makeDebugPage($variable)
-    {
-        $this->title = 'Debug';
-        $this->content = '<pre>' . htmlspecialchars(var_export($variable, true)) . '</pre>';
-    }
-
     public function makeSearchPage($tableau)
     {
         if (key_exists('recherche', $_GET)) {
@@ -86,6 +74,108 @@ class View
         $this->title = "Recherche";
         $this->content = "<h3>" . $_GET['recherche'] . "</h3>";
         $this->content .= "<p>Désolée, aucune recette ne correspond à votre recherche !</p>";
+    }
+
+    public function makeUnknownRecettePage()
+    {
+        $this->title = "Erreur";
+        $this->content = "<p> La page demandée n'existe pas. </p>";
+    }
+
+    public function makeUnknownUserPage()
+    {
+        $this->title = "Erreur";
+        $this->content = "<p> L'utilisateur saisi n'existe pas. </p>";
+    }
+
+    public function makeNoUserPage()
+    {
+        $this->title = "Vous n'êtes pas connecté !";
+
+        $this->content =
+            '<p>Vous devez vous connecter ou vous inscrire.</p>
+        <ul>
+            <li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>
+            <li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>
+        </ul>';
+    }
+
+    public function makeNoAdminPage()
+    {
+        $this->title = "Vous n'êtes pas administrateur! Accès non autorisé.";
+    }
+
+    public function makeAdminPage($users)
+    {
+        $this->title = "Espace administrateur";
+        $this->content .= "<h3>Utilisateurs enregistrés</h3>";
+        $this->content .= "<div class='listeUtilisateurs'><ul>";
+        foreach ($users as $key => $value) {
+            if ($value['utilisateur'] != 'admin') {
+                $this->content .= "<li>" . $value['utilisateur'] . "</li>";
+            }
+        }
+        $this->content .= "</ul></div>";
+        $this->content .= '<a href="' . $this->router->getUserAskDeletionURL() . '"> Supprimer un utilisateur</a><br />';
+    }
+
+    public static function makeConnexionForm()
+    {
+        $content = '<label><b>Utilisateur</b></label><br />
+        <input type="text" placeholder="Entrez utilisateur" name="username" required><br />
+        <label><b>Mot de passe</b></label><br />
+        <input type="password" placeholder="Entrer le mot de passe" name="password" required><br />';
+        return $content;
+    }
+
+    public function makeInscriptionPage()
+    {
+        $this->title = "Inscription";
+        $this->content = '<form action="' . $this->router->getInscritionURL() . '" method="POST">';
+        $this->content .= self::makeConnexionForm();
+        $this->content .= '<input type="submit" id="submit" value="Créer" ></form>';
+    }
+
+    public function makeAutreNomPage()
+    {
+        $this->title = "Inscription";
+        $this->content = "Vous ne pouvez pas choisir ce nom d'utilisateur :<br />";
+        $this->content .= '<form action="' . $this->router->getInscritionURL() . '" method="POST">';
+        $this->content .= self::makeConnexionForm();
+        $this->content .= '<input type="submit" id="submit" value="Créer" ></form>';
+    }
+
+    public function makeExistComptePage()
+    {
+        $this->title = "Inscription";
+        $this->content = "Le compte existe déjà. Veuillez choisir un autre nom d'utilisateur ou mot de passe :<br />";
+        $this->content .= '<form action="' . $this->router->getInscritionURL() . '" method="POST">';
+        $this->content .= self::makeConnexionForm();
+        $this->content .= '<input type="submit" id="submit" value="Créer" ></form>';
+    }
+
+    public function makeConnexionPage()
+    {
+        $this->title = "Se connecter";
+        $this->content = '<form action="' . $this->router->getConnexionURL() . '" method="POST">';
+        $this->content .= self::makeConnexionForm();
+        $this->content .= '<input type="submit" id="submit" value="Se connecter" > </form>';
+    }
+
+    public function makeUserDeletionPage()
+    {
+        $this->title = "Supprimer un utilisateur";
+        $this->content = '<form action="' . $this->router->getUserDeletionURL() . '" method="POST">
+        <label><b>Entrez un utilisateur à supprimer</b></label><br />
+        <input type="text" placeholder="Utilisateur" name="utilisateur" required><br />
+        <input type="submit" id="submit" value="Supprimer" > 
+        </form>';
+    }
+
+    public function makeUserDeletedPage()
+    {
+        $this->title = "Suppression de l'utilisateur effectuée";
+        $this->content = "<p>L'utilisateur a bien été supprimé.</p>";
     }
 
     public static function makeRecetteForm(RecetteBuilder $builder)
@@ -156,102 +246,6 @@ class View
         $this->content = "<p>La recette a bien été correctement supprimée.</p>";
     }
 
-    public function makeNoUserPage()
-    {
-        $this->title = "Vous n'êtes pas connecté !";
-
-        $this->content =
-            '<p>Vous devez vous connecter ou vous inscrire.</p>
-        <ul>
-            <li><a href="' . $this->router->getConnexionFormURL() . '">Connexion</a></li>
-            <li><a href="' . $this->router->getIncriptionFormURL() . '">Inscription</a></li>
-        </ul>';
-    }
-
-    public function makeNoAdminPage()
-    {
-        $this->title = "Vous n'êtes pas administrateur! Accès non autorisé.";
-    }
-
-    public static function makeConnexionForm()
-    {
-        $content = '<label><b>Utilisateur</b></label><br />
-        <input type="text" placeholder="Entrez utilisateur" name="username" required><br />
-        <label><b>Mot de passe</b></label><br />
-        <input type="password" placeholder="Entrer le mot de passe" name="password" required><br />';
-        return $content;
-    }
-
-    public function makeInscriptionPage()
-    {
-        $this->title = "Inscription";
-        $this->content = '<form action="' . $this->router->getInscritionURL() . '" method="POST">';
-        $this->content .= self::makeConnexionForm();
-        $this->content .= '<input type="submit" id="submit" value="Créer" ></form>';
-    }
-
-    public function makeAutreNomPage()
-    {
-        $this->title = "Inscription";
-        $this->content = "Vous ne pouvez pas choisir ce nom d'utilisateur :<br />";
-        $this->content .= '<form action="' . $this->router->getInscritionURL() . '" method="POST">';
-        $this->content .= self::makeConnexionForm();
-        $this->content .= '<input type="submit" id="submit" value="Créer" ></form>';
-    }
-
-    public function makeAdminPage($users)
-    {
-        $this->title = "Espace administrateur";
-        $this->content .= "<h3>Utilisateurs enregistrés</h3>";
-        $this->content .= "<div class='listeUtilisateurs'><ul>";
-        foreach ($users as $key => $value) {
-            if ($value['utilisateur'] != 'admin') {
-                $this->content .= "<li>" . $value['utilisateur'] . "</li>";
-            }
-        }
-        $this->content .= "</ul></div>";
-        $this->content .= '<a href="' . $this->router->getUserAskDeletionURL() . '"> Supprimer un utilisateur</a><br />';
-    }
-
-    public function makeUnknownUserPage()
-    {
-        $this->title = "Erreur";
-        $this->content = "<p> L'utilisateur saisi n'existe pas. </p>";
-    }
-
-    public function makeConnexionPage()
-    {
-        $this->title = "Se connecter";
-        $this->content = '<form action="' . $this->router->getConnexionURL() . '" method="POST">';
-        $this->content .= self::makeConnexionForm();
-        $this->content .= '<input type="submit" id="submit" value="Se connecter" > </form>';
-    }
-
-    public function makeUserDeletionPage()
-    {
-        $this->title = "Supprimer un utilisateur";
-        $this->content = '<form action="' . $this->router->getUserDeletionURL() . '" method="POST">
-        <label><b>Entrez un utilisateur à supprimer</b></label><br />
-        <input type="text" placeholder="Utilisateur" name="utilisateur" required><br />
-        <input type="submit" id="submit" value="Supprimer" > 
-        </form>';
-    }
-
-    public function makeUserDeletedPage()
-    {
-        $this->title = "Suppression de l'utilisateur effectuée";
-        $this->content = "<p>L'utilisateur a bien été supprimé.</p>";
-    }
-
-    public function makeExistComptePage()
-    {
-        $this->title = "Inscription";
-        $this->content = "Le compte existe déjà. Veuillez choisir un autre nom d'utilisateur ou mot de passes :<br />";
-        $this->content .= '<form action="' . $this->router->getInscritionURL() . '" method="POST">';
-        $this->content .= self::makeConnexionForm();
-        $this->content .= '<input type="submit" id="submit" value="Créer" ></form>';
-    }
-
     public function makeAProposPage()
     {
         $this->title = "À propos de nous";
@@ -260,13 +254,11 @@ class View
         $this->content .= "<h3>Notre site :</h3>";
         $this->content .= "<p>Lors de ce projet, nous devions faire un site qui utilise l'architecture MVCR que nous avons vu en cours et en TP.
         Nous avons décidé de faire un site de recettes de cuisine.
-        Nous avons donc décidé de reprendre le TP concernant les animaux, réalisé précédemment, en l'adaptant de façon à ce qu'il corresponde aux besoins de notre projet. <br />
-        BLABLABLA</p>";
+        Nous avons donc décidé de reprendre le TP concernant les animaux, réalisé précédemment, en l'adaptant de façon à ce qu'il corresponde aux besoins de notre projet. <br /></p>";
 
         $this->content .= "<h3>Les points réalisés :</h3>";
         $this->content .= "<p>Lors de ce projet, nous devions faire un site qui utilise l'architecture MVCR que nous avons vu en cours et en TP.
-        Nous avons donc décidé de reprendre le TP concernant les animals réalisé précédemment, en l'adaptant de façon à ce qu'il corresponde aux besoins de notre projet. <br />
-        BLABLABLA</p>";
+        Nous avons donc décidé de reprendre le TP concernant les animals réalisé précédemment, en l'adaptant de façon à ce qu'il corresponde aux besoins de notre projet. <br /></p>";
         $this->content .= "<p>En ce qui concerne les compléments nous devions en choisir 3 parmis la liste ci-dessous :</p>
         <ol>
             <li>(*) Une recherche d'objets.</li>
@@ -290,10 +282,15 @@ class View
 
         $this->content .= "<h3>La répartition des tâches :</h3>";
         $this->content .= "<p>Les TPs concernant la création d'un site web sur les animaux nous ont beaucoup servi.
-        Etant donné que Chamora avait terminé tout le TP concernant le site des animaux, nous avons repris sa version et l'avons adapté de façon à ce qu'elle corresponde au site que nous voulions faire.
-        De ce fait, il ne nous restait plus que l'authentification des utilisateurs et les compléments à réalisé. Nous avons eu quelques difficultés au niveau du complément concernant l'ajout d'images. Au départ </p>";
+        Etant donné que Chamora avait terminé tout le TP concernant le site des animaux, nous avons repris sa version et l'avons adapté de façon à ce qu'elle corresponde au site que nous voulions faire.<br />
+        De ce fait, il ne nous restait plus que l'authentification des utilisateurs et les compléments à réaliser. <br />Chamora s'est occupée de la barre de recherche. <br />Manon s'est occupée de la partie administrateur.
+        <br />Concernant l'upload d'images, cela s'est fait à 2 : nous voulions à la base les stocker au format blob dans notre base de données, ce que Manon a essayé à maintes reprises en vain. Chamora a donc eu l'idée
+        de stocker les images dans un dossier upload, plutôt que de les stocker dans la bd, et de stocker leur adresse et nom dans la BDD à la place, ce qui a fonctionnée. Pour le CSS, nous avons chacune apporté notre touche à tour de rôle.</p>";
 
         $this->content .= "<h3>Quelques explications concernant nos choix en matière de design, modélisation, code, etc... :</h3>";
-        $this->content .= "<p>sblablabla</p>";
+        $this->content .= "<p>Notre site étant un site culinaire, partageant des recettes de cuisine, les internautes ont la possibilité de se créer un compte
+        afin de publier leurs propres recettes. <br />L'utilisateur ayant publié la recette peut la modifier au gré de ses envies ainsi que la supprimer s'il le souhaite. Il ne peut agir que sur
+        les siennes, mais n'a pas de pouvoir sur les recettes des autres utilisateurs. <br />Certains utilisateurs peuvent avoir plus de pouvoir s'ils font parti des administrateurs. Les administrateurs ont un espace dédié, l'Espace Administrateur. Ils ont le pouvoir de modifier
+        ou supprimer n'importe quelle recette depuis la page de celle-ci. Il ont aussi accès à la gestion des comptes utilisateurs, et peuvent les supprimer depuis leur Espace Administrateur.</p>";
     }
 }

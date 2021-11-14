@@ -139,10 +139,8 @@ class Controller
             $this->view->makeAutreNomPage();
         } else {
             if ($connecte != null) {
-                //compte existe
                 $this->view->makeExistComptePage();
             } else {
-                //Ajout à la bd
                 $this->recettesdb->addNewIncription($data);
                 $_SESSION['username'] = $data['username'];
                 $recettes = $this->recettesdb->readAll();
@@ -159,7 +157,7 @@ class Controller
             $recettes = $this->recettesdb->readAll();
             $this->view->makeHomePage($recettes);
         } else {
-            $this->view->makeIdentifiantInconnuPage();
+            $this->view->makeUnknownUserPage();
         }
     }
 
