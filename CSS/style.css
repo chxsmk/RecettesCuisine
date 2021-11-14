@@ -172,6 +172,11 @@ img{
 
 }
 
+.error{
+    font-size: 11px;
+    color: tomato;
+}
+
 #submit:hover{
 	background-color: #C5E300;
 }

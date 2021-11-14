@@ -67,7 +67,7 @@ class View
         foreach ($tableau as $key => $value) {
             $this->content .= "<figure class='recette'>";
             $id = $this->router->getRecetteURL($value['id']);
-            $this->content .= '<img src="upload/' . $value['image'] . '" name="image" alte="image de la recette">';
+            $this->content .= '<img src="upload/' . $value['image'] . '" id="' . $value['image'] . '" alt="image de la recette">';
             $this->content .= "<figcaption><a href='" . $id . "'>" . $value['titre'] . "</a></figcaption>";
             $this->content .= "</figure>";
         }
@@ -79,7 +79,7 @@ class View
         $this->title = 'Une recette écrite par : ' . $recette->getUtilisateur();
         $this->content = '<h3> Recette pour : ' . $recette->getTitre() . '</h3>';
         $this->content .= '<p> Voici la recette : <br />' . $recette->getRecette() . '</p>';
-        $this->content .= '<img src="upload/' . $recette->getImage() . '" name="image"><br />';
+        $this->content .= '<img src="upload/' . $recette->getImage() . '" alt="image de la recette"><br />';
         if ($_SESSION['username'] == $recette->getUtilisateur() || $_SESSION['username'] == 'admin') {
             $this->content .= '<a href="' . $this->router->getRecetteAskDeletionURL($id) . '"> Supprimer la recette </a><br />';
             $this->content .= '<a href="' . $this->router->getRecetteModificationURL($id) . '"> Modifier la recette </a><br />';
@@ -203,26 +203,20 @@ class View
         </form>';
     }
 
-    public function makeUserDeletedPage()
-    {
-        $this->title = "Suppression de l'utilisateur effectuée";
-        $this->content = "<p>L'utilisateur a bien été supprimé.</p>";
-    }
-
     public static function makeRecetteForm(RecetteBuilder $builder)
     {
         $utilisateurRecette = $builder->getUtilisateurRef();
         $titreRecette = $builder->getTitreRef();
         $recette = $builder->getRecetteRef();
 
-        $content = '<p><label>Votre nom utilisateur :  <br /><input type="text" name="' . $utilisateurRecette . '" placeholder="Entrez votre ' . $utilisateurRecette . '" value="' . $builder->getData($utilisateurRecette) . '">';
+        $content = '<p><label>Votre nom utilisateur :  <br /><input type="text" name="' . $utilisateurRecette . '" placeholder="Nom ' . $utilisateurRecette . '" value="' . $builder->getData($utilisateurRecette) . '"><br />';
         $errUtulisateur = $builder->getErrors($utilisateurRecette);
         if ($errUtulisateur !== null) {
             $content .= ' <span class="error">' . $errUtulisateur . '</span>';
         }
         $content .= '</label></p>';
 
-        $content .= '<p><label>Nom de la recette :  <br /><input type="text" name="' . $titreRecette . '" placeholder="Entrez ' . $titreRecette . '" value="' . $builder->getData($titreRecette) . '">';
+        $content .= '<p><label>Nom de la recette :  <br /><input type="text" name="' . $titreRecette . '" placeholder="Le ' . $titreRecette . '" value="' . $builder->getData($titreRecette) . '"><br />';
         $errTitre = $builder->getErrors($titreRecette);
         if ($errTitre !== null) {
             $content .= ' <span class="error">' . $errTitre . '</span>';
@@ -246,8 +240,8 @@ class View
         $this->title = "Ajouter votre recette";
         $this->content .= '<form enctype="multipart/form-data" action="' . $this->router->getRecetteSaveURL() . '" method="POST">';
         $this->content .= self::makeRecetteForm($builder);
-        $this->content .= "<p>Attention, l'image ne pourra pas être modifiée ! </p>";
         $this->content .= '<p><label>Choisissez le fichier image (JPEG ou PNG) : <input type="file" name="' . $imageRecette . '" accept="image/png, image/jpeg" required>';
+        $this->content .= "<span class='error'> Attention, l'image ne pourra pas être modifiée par la suite ! </span>";
         $this->content .= '</label></p>';
 
         $this->content .= '<button>Créer</button></form>';
@@ -314,7 +308,7 @@ class View
         $this->content .= "<p>Notre site étant un site culinaire, partageant des recettes de cuisine, les internautes ont la possibilité de se créer un compte
         afin de publier leurs propres recettes. <br />L'utilisateur ayant publié la recette peut la modifier au gré de ses envies ainsi que la supprimer s'il le souhaite. Il ne peut agir que sur
         les siennes, mais n'a pas de pouvoir sur les recettes des autres utilisateurs. <br />
-        Par la suite, nous avons un administrateur qui a un espace dédié à lui, l'Espace Administrateur. il a le pouvoir de modifier ou de supprimer n'importe quelle recette depuis la page de celle-ci. 
+        Par la suite, nous avons un administrateur qui a un espace dédié à lui, l'Espace Administrateur. Il a la possibilité de modifier ou de supprimer n'importe quelle recette et de modifier le nom du créateur d'une recette. 
         Il a aussi accès à la gestion des comptes utilisateurs, et peut les supprimer depuis son Espace Administrateur.</p>";
     }
 }

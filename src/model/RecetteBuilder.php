@@ -36,14 +36,14 @@ class RecetteBuilder
     public function isValid()
     {
         $this->errors = array();
-        if (!key_exists("utilisateur", $this->data) || $this->data["utilisateur"] === "" || $this->data['utilisateur'] != $_SESSION['username']) {
-            $this->errors["utilisateur"] = "Vous devez entrer votre nom utilisateur !";
+        if (!key_exists("utilisateur", $this->data) || $this->data["utilisateur"] === "" || ($_SESSION['username'] != 'admin' && $this->data['utilisateur'] != $_SESSION['username'])) {
+            $this->errors["utilisateur"] = "Veuillez entrer votre nom d'utilisateur !";
         }
         if (!key_exists("titre", $this->data) || $this->data["titre"] === "") {
-            $this->errors["titre"] = "Vous devez entrer un titre !";
+            $this->errors["titre"] = "Veuillez entrer un titre !";
         }
         if (!key_exists("recette", $this->data) || $this->data["recette"] === "") {
-            $this->errors["recette"] = "Vous devez entrer la recette !";
+            $this->errors["recette"] = "Veuillez entrer la recette !";
         }
         return count($this->errors) === 0;
     }

@@ -92,17 +92,11 @@ class Controller
 
     public function deleteRecette($id)
     {
-        $recette = $this->recettesdb->read($id);
-        if ($recette) {
-            $nomImage = $recette->getImage();
-            $supp = $this->recettesdb->deleteRecette($id);
-            if (!$supp || !$nomImage) {
-                $this->view->makeUnknownRecettePage();
-            } else {
-                unlink('upload/' . $nomImage);
-                $recettes = $this->recettesdb->readAll();
-                $this->view->makeHomePage($recettes);
-            }
+        $supp = $this->recettesdb->deleteRecette($id);
+        if (!$supp) {
+            $this->view->makeUnknownRecettePage();
+        } else {
+            header('Location: index.php?action=accueil');
         }
     }
 
@@ -149,8 +143,7 @@ class Controller
             } else {
                 $this->recettesdb->addNewIncription($data);
                 $_SESSION['username'] = $data['username'];
-                $recettes = $this->recettesdb->readAll();
-                $this->view->makeHomePage($recettes);
+                header('Location: index.php?action=accueil');
             }
         }
     }
@@ -160,8 +153,7 @@ class Controller
         $connecte = $this->recettesdb->verification($data);
         if ($connecte != null) {
             $_SESSION['username'] = $data['username'];
-            $recettes = $this->recettesdb->readAll();
-            $this->view->makeHomePage($recettes);
+            header('Location: index.php?action=accueil');
         } else {
             $this->view->makeUnknownUserPage();
         }
@@ -171,7 +163,7 @@ class Controller
     {
         if ($this->recettesdb->userExist($user)) {
             $this->recettesdb->deleteUsername($user);
-            $this->view->makeUserDeletedPage();
+            header('Location: index.php?action=espaceAdmin');
         } else {
             $this->view->makeUnknownUserPage();
         }
